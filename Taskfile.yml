@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  run:
+    desc: "Run locally"
+    cmds:
+      - quarto preview
+
+  deploy:manual:
+    desc: "Deploy manually to the webserver"
+    cmds:
+      - quarto render
+      - task: :web:deploy-static
+        vars:
+          STATIC_DIR: _site
+          SITE_NAME: aot
+          PROJECT_DIR: "{{.TASKFILE_DIR}}"
