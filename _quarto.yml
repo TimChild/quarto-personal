@@ -2,13 +2,14 @@ project:
   type: website
 
 website:
-  title: "Dotfiles Guide"
+  title: "Adventures of Tim"
   navbar:
     left:
       - href: index.qmd
         text: Home
       - about.qmd
       - guides-index.qmd
+  site-url: https://adventuresoftim.com/quarto/
 
 format:
   # revealjs:
