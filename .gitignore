@@ -1,0 +1,13 @@
+# Taskfile cache
+*/.task
+
+# Don't push secrets to github
+.env
+
+# Quarto ignore
+/.quarto/
+_freeze/
+_site/
+
+.python-version
+
