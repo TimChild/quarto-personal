@@ -69,11 +69,20 @@ To update the site, just run the same `deploy-static` task again.
 This process can be made even easier by adding a task in the sites repository Taskfile.
 
 ```yaml
+includes:
+  # Include webserver task
+  web:
+    taskfile: ~/path/to/webserver/Taskfile.yml
+    dir: ~/path/to/webserver-dir
+    optional: true
+    internal: true
+
+tasks:
   deploy:
     desc: "Deploy the static site"
     cmds:
       - quarto render  # Or whatever command is needed to build the site
-      - task: :web:deploy-static  # Leading colon specifies running a global task
+      - task: web:deploy-static
         vars:
           STATIC_DIR: _site
           SITE_NAME: quarto-dotfiles
@@ -96,5 +105,4 @@ The required secrets for the template workflow are shown below, although these w
 - **Vars**:
   - `DROPLET_IP` -- The IP address of the webserver (since the GHA runner wont have the ssh alias set up)
   - `SITE_NAME` -- The name of the site on the webserver (same as the `SITE_NAME` used in other tasks)
-  - `DOMAIN` -- The domain of the site (required in .env file for reflex backend)
 

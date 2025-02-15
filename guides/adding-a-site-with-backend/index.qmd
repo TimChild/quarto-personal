@@ -58,6 +58,15 @@ To update the site, just run the same `deploy-docker-backend` task again.
 This can be made easier by making a task for this in the repository that has the backend service. E.g.
 
 ```yaml
+includes:
+  # Include webserver task
+  web:
+    taskfile: ~/path/to/webserver/Taskfile.yml
+    dir: ~/path/to/webserver-dir
+    optional: true
+    internal: true
+
+tasks:
   manual_deploy_backend:
     prompt: This is normally handled by a GHA workflow. Are you sure you want to continue?
     desc: Build the backend and deploy it to the server (usually should rely on CI/CD instead)
@@ -65,7 +74,7 @@ This can be made easier by making a task for this in the repository that has the
       SSH_NAME: "webserver"
       SITE_NAME: "new-backend-site"
     cmds:
-      - task: :web:deploy-docker-backend
+      - task: web:deploy-docker-backend
         vars:
           SSH_NAME: "{{.SSH_NAME}}"
           SITE_NAME: "{{.SITE_NAME}}"
