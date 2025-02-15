@@ -1,5 +1,5 @@
 # Taskfile cache
-*/.task
+.task/
 
 # Don't push secrets to github
 .env
