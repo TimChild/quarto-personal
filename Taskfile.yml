@@ -1,5 +1,11 @@
 version: "3"
 
+includes:
+  web:
+    taskfile: ~/github/webserver-personal/Taskfile.yml
+    dir: ~/github/webserver-personal
+    optional: true
+
 tasks:
   run:
     desc: "Run locally"
@@ -10,8 +16,9 @@ tasks:
     desc: "Deploy manually to the webserver"
     cmds:
       - quarto render
-      - task: :web:deploy-static
+      - task: web:deploy-static
         vars:
           STATIC_DIR: _site
-          SITE_NAME: aot
+          SITE_NAME: aot-quarto
           PROJECT_DIR: "{{.TASKFILE_DIR}}"
+          SSH_NAME: "{{.SSH_NAME}}"
