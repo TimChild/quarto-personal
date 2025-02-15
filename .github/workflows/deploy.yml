@@ -63,7 +63,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install dependencies and activate virtual environment
-        run: uv pip install jupyter numpy pandas matplotlib plotly
+        run: uv pip install jupyter numpy pandas matplotlib plotly statsmodels
 
       - name: Build static site files
         uses: quarto-dev/quarto-actions/render@v2
