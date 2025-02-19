@@ -1,6 +1,7 @@
 ---
 title: "Adding a static site"
 date: "2025-02-15"
+date-modified: "2025-02-19"
 categories: [webserver]
 ---
 
@@ -93,9 +94,11 @@ tasks:
 
 Generally, it's better to set up an automated workflow for things like deployment.
 
+### Using a template workflow
+
 There is a template github actions workflow `other-templates/github-workflows/deploy-static-site.template.yml` that can be copied to the `.github/workflows` directory in the of the site that should automatically deploy to the webserver.
 
-A `production` environment will need to be set up for that GitHub repository.
+You'll want to set up an environment to add the necessary `vars` and `secrets` (in the template it assumes a `production` environment). See this guide on [Managing environments for deployment](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment) to learn environments.
 
 The required secrets for the template workflow are shown below, although these will likely need to be tailored to the specific project:
 
@@ -103,6 +106,6 @@ The required secrets for the template workflow are shown below, although these w
   - `SSH_PRIVATE_KEY` -- A private ssh key that grants access to the webserver (obtained via the `task -g web:add-ssh-key` command)
   - `GITHUB_TOKEN` -- This is set automatically by GitHub (**do not set this manually**)
 - **Vars**:
-  - `DROPLET_IP` -- The IP address of the webserver (since the GHA runner wont have the ssh alias set up)
+  - `VPS_IP` -- The IP address of the webserver (since the GHA runner wont have the ssh alias set up)
   - `SITE_NAME` -- The name of the site on the webserver (same as the `SITE_NAME` used in other tasks)
 
