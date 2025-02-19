@@ -13,9 +13,12 @@ on:
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: production
       uses:
+    permissions:
+      contents: read
 
     steps:
       - name: Call reusable-deploy
