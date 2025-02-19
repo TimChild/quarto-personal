@@ -1,17 +1,15 @@
-# Deploys a static site
 name: Deploy Site
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       branch:
         description: "Branch to deploy"
         required: true
         default: "main"
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -22,65 +20,12 @@ jobs:
       contents: read
 
     steps:
-      - name: Check variables set
-        # Make it easier to see when environment setup is incorrect
-        run: |
-          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
-            echo "SSH_PRIVATE_KEY is not set"
-            exit 1
-          fi
-          if [ -z "${{ vars.DROPLET_IP }}" ]; then
-            echo "DROPLET_IP is not set"
-            exit 1
-          fi
-          if [ -z "${{ vars.SITE_NAME }}" ]; then
-            echo "SITE_NAME is not set"
-            exit 1
-          fi
-
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Deploy site via template action
+        uses: TimChild/webserver-template/actions/deploy-quarto-static-site@main
         with:
-          ref: ${{ github.event.inputs.branch || github.ref }}
-
-      - name: Setup static site builder (e.g. Quarto)
-        uses: quarto-dev/quarto-actions/setup@v2
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          version: "0.6.x"
-
-      - name: Setup Python
-        uses: actions/setup-python@v5 # Use official because GH caches it
-        with:
-          python-version-file: "pyproject.toml"
-
-      - name: Install dependencies and activate virtual environment
-        run: uv sync
-
-      - name: Build static site files
-        uses: quarto-dev/quarto-actions/render@v2
-
-      - name: Send static files to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ vars.DROPLET_IP }}
-          username: webadmin
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          source: ./_site/ # This is the default build directory for Quarto
-          target: sites/${{ vars.SITE_NAME }}/static/
-          strip_components: 2
-          overwrite: true
-
-      - name: Update frontend files on server
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ vars.DROPLET_IP }}
-          username: webadmin
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Note: This script is present on the server from the webserver setup
-          script: |
-            ./scripts/webserver-update-static-files.sh
+          vps-ip: ${{ vars.DROPLET_IP }}
+          site-name: ${{ vars.SITE_NAME }}
+          uses-python: true
+          uses-r: false
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-user: "webadmin"
