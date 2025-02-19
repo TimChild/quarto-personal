@@ -23,8 +23,7 @@ jobs:
         with:
           vps-ip: ${{ vars.DROPLET_IP }}
           site-name: ${{ vars.SITE_NAME }}
-          ssh-user: "webadmin"
           uses-python: true
           uses-r: false
-        secrets:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-user: "webadmin"
