@@ -15,12 +15,16 @@ jobs:
   deploy:
     environment:
       name: production
-      uses: TimChild/deploy-quarto-static-site.yml@main
-      with:
-        vps-ip: ${{ vars.DROPLET_IP }}
-        site-name: ${{ vars.SITE_NAME }}
-        ssh-user: "webadmin"
-        uses-python: true
-        uses-r: false
-      secrets:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      uses:
+
+    steps:
+      - name: Call reusable-deploy
+        uses: TimChild/deploy-quarto-static-site.yml@main
+        with:
+          vps-ip: ${{ vars.DROPLET_IP }}
+          site-name: ${{ vars.SITE_NAME }}
+          ssh-user: "webadmin"
+          uses-python: true
+          uses-r: false
+        secrets:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
