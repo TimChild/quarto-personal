@@ -20,6 +20,9 @@ jobs:
       contents: read
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy site via template action
         uses: TimChild/webserver-template/actions/deploy-quarto-static-site@main
         with:
