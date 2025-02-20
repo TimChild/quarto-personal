@@ -116,9 +116,9 @@ The navigation transitions depend on whether there are **any** `#` level heading
 
 Using `---` to separate slides is very similar to `##`, but just doesn't create any heading.
 
-[Only `##` and `---` separated slides](/presentations/only-h2-separators.qmd)
+[Only `##` and `---` separated slides](/presentations/only-h2-separators.qmd){target="_blank"}
 
-[Both `#` and `##` separated slides](/presentations/mixed-separators.qmd)
+[Both `#` and `##` separated slides](/presentations/mixed-separators.qmd){target="_blank"}
 
 
 ## Notes on options
