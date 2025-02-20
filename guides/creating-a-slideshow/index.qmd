@@ -1,5 +1,4 @@
 ---
-draft: true
 title: "Creating a revealjs slideshow"
 date: "2025-02-19"
 categories: [quarto, revealjs]
@@ -13,7 +12,19 @@ This is a quick guide to creating a new slideshow using the revealjs format in Q
 I also have a task for creating a standalone revealjs presentation host by my [webserver](https://github.com/TimChild/webserver-template), but that doesn't take advantage of additional Quarto formatting extensions.
 :::
 
-See a [demonstration](/presentations/demo-presentation.qmd).
+See a [demonstration](/presentations/demo-presentation.qmd) here.
+
+The demonstration file is `/presentations/demo-presentation.qmd` (where the `/` represents the root of the site folder, not the root of the server).
+
+## Presentations directory
+
+To create a new presentation just add a new `.qmd` file to the `presentations` directory.
+
+::: {.callout-note}
+
+It's important to use the `presentations` directory because there is a `_metadata.yml` file in there that sets up defaults for presentations (using the `revealjs` format).
+:::
+
 
 ## Frontmatter
 
@@ -24,8 +35,93 @@ Something like this should generally work well as a starting point:
 ```markdown
 ---
 title: "My Slideshow"
-format: revealjs
+subtitle: "The slide subtitle"
 ---
 ```
 
+There are default `format` options specified in the `_metadata.yml` file that is also in the `presentations` directory.
+
+That is why it is not necessary to specify `format: revealjs` to make a slideshow when files are created in this directory.
+
+By default, an `html` version of the presentation will also be produced and available via the `.html` extension. The `revealjs` version will have a `.rjs` extension (as set in `_metadata.yml`). A link to the html version can be specified by explicitly using the `.html` extension, E.g.
+
+`[Link to demo html](/presentations/demo-presentation.html)`
+
+which produces -- [Link to demo html](/presentations/demo-presentation.html).
+
+To override the defaults, or futher customize the slideshow, you can do so by adding:
+
+```markdown
+---
+format:
+  revealjs:
+    theme: "white"
+    transition: "slide"
+    ...
+  html: default
+---
+```
+
+For a full list of options, see the [revealjs documentation](https://quarto.org/docs/reference/formats/presentations/revealjs.html).
+
+::: {.callout-note}
+The `format` option at the `document` level is [special](https://quarto.org/docs/projects/quarto-projects.html#metadata-merging) and merges slightly differently. If it is specified, then **only** the output types specified will be produced. 
+
+Above, adding `html: default` means that the default behaviour of producing both a revealjs and html version of the document will be maintained, however if `html` was not specified, then only the revealjs version would be produced.
+:::
+
+## Accessing the presentation
+
+The presentation will be available at the same path as the `.qmd` file, but with the `.rjs` extension. E.g. `https://<site-name>/presentations/my-slideshow.rjs`.
+
+Because it is not in the `guides` directory, it will not show up in the guides index page. It is possible to link to the presentation from the guides though. Simply add add a link, e.g.:
+
+`[My Slideshow](/presentations/my-slideshow.qmd)`
+
+::: {.callout-note collapse=true}
+## Using a relative link
+It's also possible to use relative links. E.g.
+
+`[My Slideshow](../../presentations/my-slideshow.qmd)`
+
+[My Slideshow](../../presentations/demo-presentation.qmd)
+
+But from a guide you'll have to go up two levels first. It's generally easier to follow if it just starts from the project root using `/`.
+:::
+
+As noted in [Frontmatter](#frontmatter), you can also link to the html version of the presentation if you prefer.
+
+## Limitations
+
+### Mermaid diagrams in Chrome
+
+Currently (2025-02-20) google chrome does not always load mermaid diagrams properly (you'll see either an obvious error message or something like `「` show up in it's place)[^1]
+
+I have not yet seen this issue in Firefox.
+
+
+[^1]: I'm not sure exactly what the conditions are that lead to the rendering errors, as it seems to be working as I am writing this guide...
+
+## General usage notes
+
+### Slide separators and transitions
+
+Slides are separated by any of `#`, `##`, `---`.
+
+Using `#` to separate slides creates title pages where the content is centered vertically and a bit larger. The navigation transition will *always* be side-to-side (using the default `slide` transition).
+
+
+Using `##` to separate slides creates more content oriented slides. This is generally the best option (where only the title slide defined by the frontmatter uses the `#` style formatting).
+The navigation transitions depend on whether there are **any** `#` level headings included in the presentation. If not, then the navigation transitions will be side-to-side (using the default `slide` transition). However, if there are any `#` level headings, then the navigation transitions will be side-to-side until the first `#` slide is reached, and then top-to-bottom from there on. In this mode, they work well with `navigation-mode: vertical` (see [Notes on options](#notes-on-options)).
+
+Using `---` to separate slides is very similar to `##`, but just doesn't create any heading.
+
+[Only `##` and `---` separated slides](/presentations/only-h2-separators.qmd)
+
+[Both `#` and `##` separated slides](/presentations/mixed-separators.qmd)
+
+
+## Notes on options
+
+- `navigation-mode` -- If set to `vertical` instead of the default `linear` then you'll also see options to move up and down on slides (if mixed separators are used). In this mode, it's easy to inadvertently miss slides though. `linear` still uses the vertical transitions, but simplifies the navigation controls to just left and right.
 

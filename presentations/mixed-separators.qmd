@@ -1,0 +1,44 @@
+---
+title: "Mixed separators for slides"
+subtitle: "In this example, both `#` and `##` headings are used to separate slides"
+---
+
+## Slide 1 -- `##`
+
+{{< lipsum 1 >}}
+
+## Slide 2 -- `##`
+
+{{< lipsum 2-2 >}}
+
+# Slide 3 -- `#`
+
+{{< lipsum 3-3 >}}
+
+
+## Slide 4 -- `##` and smaller {.smaller}
+
+{{< lipsum 5-5 >}}
+
+## Slide 5 -- `##`
+
+{{< lipsum 1 >}}
+
+
+# Slide 6 -- `#`
+
+{{< lipsum 2-2 >}}
+
+---
+
+Slide 7 (separated with `---`)
+
+{{< lipsum 2-2 >}}
+
+---
+
+Slide 8 (separated with `---`)
+
+{{< lipsum 3-3 >}}
+
+

@@ -1,11 +1,14 @@
 format:
   revealjs:
+    # So that the revealjs files don't clash with the html outputs
+    output-ext: rjs
+
     theme: black
 
     transition: slide
 
     controls: true
-    navigation-mode: vertical
+    navigation-mode: linear
     controls-layout: bottom-right
     controls-tutorial: true
     controls-back-arrows: visible

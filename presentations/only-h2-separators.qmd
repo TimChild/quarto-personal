@@ -1,0 +1,25 @@
+---
+title: "Only h2 Separators"
+subtitle: "In this example, only ## (and `---`) separators are used to create slides"
+---
+
+## Slide 1
+
+{{< lipsum 1 >}}
+
+## Slide 2
+
+{{< lipsum 2-2 >}}
+
+## Slide 3 {.smaller}
+
+{{< lipsum 3-4 >}}
+
+---
+
+{{< lipsum 1 >}}
+
+## Slide 4 {.smaller}
+
+{{< lipsum 5-5 >}}
+

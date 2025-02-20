@@ -1,8 +1,10 @@
 ---
-draft: true
 title: "Quarto slideshow"
 subtitle: "A demonstration of Quarto's slideshow capabilities"
-author: "Tim Child"
+# format:
+#   revealjs: 
+#     navigation-mode: vertical
+#   html: default
 ---
 
 
