@@ -1,16 +1,32 @@
 ---
 draft: true
-title: "Athena Pitch Deck"
-format: 
-  revealjs:
-    output-file: "pitch-deck-presentation.html"
+title: "AthenaInstruments"
+subtitle: "Accelerating the practical application of generative AI in varied workflows"
 ---
 
-## Slide 1
+## Problems
 
-{{< lipsum 1 >}}
+::: {.incremental}
 
-## Slide 2
+- The *best* generative AI providers change on a weekly basis -- It's not optimal to be tied to a single provider given the pace of innovation
 
-{{< lipsum 2-2 >}}
+- The *best* models are different for different tasks -- Even if you're tied to the best overall provider, they may not have the best models for every task.
 
+- The model doesn't know *your* workflows -- You know how a certain task should be carried out, but the model is going to make up a new method every time it's asked.
+
+:::
+
+## Overview
+
+**AthenaInstruments** is a platform that tackles these problems without re-inventing the wheel.
+
+We want to provide users an easy way to work at the cutting edge of generative AI without needing to be an expert in the field, or to re-build their workflows on a weekly basis. 
+
+At the same time, we want to let the user have access to the customizations they are most interested in.
+
+The general idea is to build a platform that works well for a range of tasks right out of the box, seamlessly taking advantage of the best models from any provider on any given day. And then to expose the tools that allow us to provide this service in a way that an interested user can tweak an existing service to their needs, or build a whole new service from scratch if they so desire.
+
+
+## How it works
+
+We build a 
