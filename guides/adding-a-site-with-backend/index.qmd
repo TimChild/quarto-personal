@@ -1,6 +1,7 @@
 ---
 title: "Adding a site with a backend"
 date: "2025-02-15"
+date-modified: "2025-02-19"
 categories: [webserver]
 ---
 
@@ -88,7 +89,8 @@ Generally, it's better to set up an automated workflow for things like deploymen
 
 There is a template github actions workflow `other-templates/github-workflows/deploy-reflex-site.template.yml` that can be copied to the `.github/workflows` directory in the of the site that should automatically deploy to the webserver.
 
-A `production` environment will need to be set up for that GitHub repository.
+You'll want to set up an environment to add the necessary `vars` and `secrets` (in the template it assumes a `production` environment). See this guide on [Managing environments for deployment](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment) to learn environments.
+
 
 The required secrets for the template workflow are shown below, although these will likely need to be tailored to the specific project:
 
