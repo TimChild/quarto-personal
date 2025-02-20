@@ -1,0 +1,17 @@
+format:
+  revealjs:
+    theme: black
+
+    transition: slide
+
+    controls: true
+    navigation-mode: vertical
+    controls-layout: bottom-right
+    controls-tutorial: true
+    controls-back-arrows: visible
+
+    hide-inactive-cursor: true
+    hide-cursor-time: 2000
+
+    mermaid:
+      theme: dark

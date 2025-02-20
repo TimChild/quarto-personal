@@ -12,16 +12,6 @@ website:
   site-url: https://adventuresoftim.com/quarto/
 
 format:
-  # revealjs:
-  #   theme: black
-  #   # theme: darkly
-  #   navigation-mode: vertical
-  #   controls-layout: bottom-right
-  #   controls-tutorial: true
-  #   mermaid:
-  #     theme: dark
-  # pdf:
-  #   code-block-theme: github
   html:
     theme: [brand, darkly, themes/theme-dark.scss]
 
