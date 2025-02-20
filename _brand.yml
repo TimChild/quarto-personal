@@ -39,16 +39,6 @@ typography:
   monospace:
     family: IBM Plex Mono
     size: 1em
-
-defaults:
-  # bootstrap:
-  # bootstrap variable definitions
-  quarto:
-    format:
-      # basic format-specific settings
-      html:
-        theme: [brand, darkly]
-        # 2025-02-13 -- brand seems to have no effect in the dark mode -- for now
-      revealjs:
-  shiny:
-    # shiny specific settings
+# defaults:
+#   bootstrap:
+#     defaults:

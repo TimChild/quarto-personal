@@ -23,13 +23,10 @@ format:
   # pdf:
   #   code-block-theme: github
   html:
-    theme: [brand, themes/theme-dark.scss]
+    theme: [brand, darkly, themes/theme-dark.scss]
 
     # Default to me as author on anything in here.
     author: "Tim Child"
-    # theme:
-    #   light: [flatly, brand]
-    #   dark: [darkly, brand]
     css: styles.css
     toc: true
     # code-block-theme: github
