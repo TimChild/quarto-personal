@@ -1,0 +1,31 @@
+---
+draft: true
+title: "Creating a revealjs slideshow"
+date: "2025-02-19"
+categories: [quarto, revealjs]
+---
+
+## Overview
+
+This is a quick guide to creating a new slideshow using the revealjs format in Quarto.
+
+::: {.aside}
+I also have a task for creating a standalone revealjs presentation host by my [webserver](https://github.com/TimChild/webserver-template), but that doesn't take advantage of additional Quarto formatting extensions.
+:::
+
+See a demonstration at [demo-presentation.qmd](demo-presentation.qmd).
+
+## Frontmatter
+
+For a full reference, see the [Quarto documentation](https://quarto.org/docs/reference/formats/presentations/revealjs.html).
+
+Something like this should generally work well as a starting point:
+
+```markdown
+---
+title: "My Slideshow"
+format: revealjs
+---
+```
+
+

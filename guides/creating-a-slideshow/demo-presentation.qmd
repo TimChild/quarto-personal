@@ -1,0 +1,172 @@
+---
+draft: true
+title: "Quarto slideshow"
+subtitle: "A demonstration of Quarto's slideshow capabilities"
+author: "Tim Child"
+format:
+  revealjs: {}
+    # theme: black
+    # # theme: darkly
+    # navigation-mode: vertical
+    # controls-layout: bottom-right
+    # controls-tutorial: true
+    # transition: slide
+    # mermaid:
+    #   theme: dark
+---
+
+
+# Slide 1
+
+Here is some info for slide 1
+
+
+# Slide 2
+
+Here is some info for slide 2
+
+## Slide 3
+
+sub slide
+
+---
+
+Does this force a slide three?
+
+# Asides?
+
+Note: Seems like asides don't work properly when allowing vertical navication... Eveything gets squished into the same space... Works ok if put into a vertical page though...
+
+## What about a sub-heading
+
+What about asides?^[footnote contents]
+
+Can I specify differently? [^footnote]
+
+[^footnote]: This is the footnote contents
+
+::: aside
+This should be an aside that shows up above the footnotes
+:::
+
+
+# What about code blocks
+
+```python[1-3]
+def func():
+	b = 1
+	return "hello"
+```
+
+---
+
+```{.python code-line-numbers="1|2-3|"}
+def example_code():
+    print("Hello, World!")
+    #  comment
+    return "Hello, World!"
+```
+
+# Mermaid graphs
+
+```{mermaid}
+flowchart LR
+  A[Hard edge] --> B(Round edge)
+  B --> C{Decision}
+  C --> D[Result one]
+  C --> E[Result two]
+```
+
+```{mermaid}
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+---
+
+```{mermaid}
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+
+```
+
+---
+
+```{mermaid}
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>Bob: Hello Bob, how are you?
+    Bob-->>Alice: I am good thanks!
+
+```
+
+---
+
+```{mermaid}
+gantt
+    title A Gantt Diagram
+    dateFormat  YYYY-MM-DD
+    section Section
+    A task           :a1, 2025-02-01, 30d
+    Another task     :after a1  , 20d
+
+```
+
+---
+
+
+```{mermaid}
+pie
+    title Key Features
+    "Feature A" : 40
+    "Feature B" : 30
+    "Feature C" : 30
+
+```
+
+---
+
+
+```{mermaid}
+classDiagram
+    class Animal {
+      +String name
+      +int age
+      +void eat()
+    }
+    class Dog {
+      +String breed
+      +void bark()
+    }
+    Animal <|-- Dog
+
+```
+
+# Callouts {.smaller}
+
+::: {.callout-note collapse=true}
+This is a note callout
+:::
+
+::: {.callout-warning}
+This is a warning callout
+:::
+
+::: {.callout-important}
+This is a tip callout
+:::
+
+::: {.callout-tip}
+This is an info callout
+:::
+
+::: {.callout-caution}
+This is an info callout
+:::
