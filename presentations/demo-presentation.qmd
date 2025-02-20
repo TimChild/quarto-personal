@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Quarto slideshow"
 subtitle: "A demonstration of Quarto's slideshow capabilities"
 author: "Tim Child"

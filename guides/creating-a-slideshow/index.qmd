@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "Creating a revealjs slideshow"
 date: "2025-02-19"
 categories: [quarto, revealjs]
@@ -13,7 +13,7 @@ This is a quick guide to creating a new slideshow using the revealjs format in Q
 I also have a task for creating a standalone revealjs presentation host by my [webserver](https://github.com/TimChild/webserver-template), but that doesn't take advantage of additional Quarto formatting extensions.
 :::
 
-See a demonstration at [demo-presentation.qmd](demo-presentation.qmd).
+See a [demonstration](/presentations/demo-presentation.qmd).
 
 ## Frontmatter
 
