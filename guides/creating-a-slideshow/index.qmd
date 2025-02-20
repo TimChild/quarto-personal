@@ -1,5 +1,5 @@
 ---
-draft: false
+draft: true
 title: "Creating a revealjs slideshow"
 date: "2025-02-19"
 categories: [quarto, revealjs]

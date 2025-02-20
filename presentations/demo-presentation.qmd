@@ -1,18 +1,8 @@
 ---
-draft: false
+draft: true
 title: "Quarto slideshow"
 subtitle: "A demonstration of Quarto's slideshow capabilities"
 author: "Tim Child"
-format:
-  revealjs: {}
-    # theme: black
-    # # theme: darkly
-    # navigation-mode: vertical
-    # controls-layout: bottom-right
-    # controls-tutorial: true
-    # transition: slide
-    # mermaid:
-    #   theme: dark
 ---
 
 
