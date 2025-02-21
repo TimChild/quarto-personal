@@ -1,7 +1,6 @@
 ---
 title: "Adding a site with a backend"
 date: "2025-02-15"
-date-modified: "2025-02-19"
 categories: [webserver]
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: "Adding a static site"
 date: "2025-02-15"
-date-modified: "2025-02-19"
 categories: [webserver]
 ---
 
