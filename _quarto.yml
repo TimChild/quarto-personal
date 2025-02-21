@@ -20,7 +20,7 @@ author: "Tim Child"
 
 # freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
-freeze: true
+freeze: auto # re-render only when source changes
 
 format:
   html:
