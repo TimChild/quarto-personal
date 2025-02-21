@@ -15,9 +15,13 @@ about:
       href: https://adventuresoftim.com
 ---
 
-This is my personal blogging site and where I keep guides for my own reference. For my portfolio page, see [adventuresoftim.com](https://adventuresoftim.com).
+This is my personal blogging site and where I keep guides for my own reference. 
 
-Since you're here though, here's a bit about me:
+For links to my guides, see [here](guides-index.qmd). For example, this website is currently being served by a webserver set up following [these instructions](guides/setting-up-webserver/index.qmd).
+
+For my portfolio page, see [adventuresoftim.com](https://adventuresoftim.com).
+
+Since you're here now, here's some information about me:
 
 ---
 

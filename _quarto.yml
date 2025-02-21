@@ -8,11 +8,12 @@ website:
   title: "Adventures of Tim"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
+      - href: /
+        text: Portfolio
       - about.qmd
       - guides-index.qmd
-  site-url: https://adventuresoftim.com/quarto/
+  # site-url: https://adventuresoftim.com/quarto/
+  site-url: https://adventuresoftim.com/
 
 ## Defaults for all formats
 # Default to me as author on anything in here.
