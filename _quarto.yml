@@ -9,7 +9,7 @@ website:
   navbar:
     left:
       - href: /
-        text: Portfolio
+        text: Profile
       - about.qmd
       - guides-index.qmd
   # site-url: https://adventuresoftim.com/quarto/
