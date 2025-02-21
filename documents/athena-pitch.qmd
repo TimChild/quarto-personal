@@ -2,6 +2,7 @@
 draft: false
 title: "AthenaInstruments"
 subtitle: "Accelerating the practical application of generative AI in varied workflows"
+date: last-modified
 format:
   typst: default
   html: default
