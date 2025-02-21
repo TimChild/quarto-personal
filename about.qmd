@@ -13,6 +13,9 @@ about:
     - icon: house-heart
       text: Personal site
       href: https://adventuresoftim.com
+    - icon: filetype-pdf
+      text: CV
+      href: assets/cv.pdf
 ---
 
 This is my personal blogging site and where I keep guides for my own reference. 
@@ -45,3 +48,5 @@ In the past year, I have move toward entrepreneurship, driven by a passion for h
 
 ### Current Focus and Future Goals
 I am currently focused on leveraging my skills in AI and software development. I'm actively seeking funding opportunities to scale my project into a sustainable business, but I am also very interested in joining a team in a role that will challenge and inspire me.
+
+

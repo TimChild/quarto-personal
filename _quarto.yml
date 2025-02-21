@@ -4,6 +4,9 @@ project:
   preview:
     port: 4200
 
+  resources:
+    - "assets/*"
+
 website:
   title: "Adventures of Tim"
   navbar:
