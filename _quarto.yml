@@ -18,6 +18,10 @@ website:
 # Default to me as author on anything in here.
 author: "Tim Child"
 
+# freeze computational output
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+freeze: true
+
 format:
   html:
     theme: [brand, darkly, themes/theme-dark.scss]
