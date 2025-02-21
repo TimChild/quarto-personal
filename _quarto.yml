@@ -21,6 +21,7 @@ website:
 ## Defaults for all formats
 # Default to me as author on anything in here.
 author: "Tim Child"
+date-modified: last-modified
 
 # freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
