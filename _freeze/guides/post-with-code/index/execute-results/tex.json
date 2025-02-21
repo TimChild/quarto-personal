@@ -1,0 +1,11 @@
+{
+  "hash": "d5f76569b56b0de4ac69b9f5421ccd49",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Posts that include executable code\"\ndate: \"2025-02-12\"\ncategories: [quarto, dotfiles]\njupyter: python3\n---\n\n\n\n\n\n\n\n\n## Executing code with quarto\n\nQuarto makes it easy to include executable code within documents. For example:\n\nIncluding\n````md\n```python\nfor i in range(5):\n    print(i)\n```\n````\n\nProduces:\n\n::: {.cell execution_count=1}\n``` {.python .cell-code}\nfor i in range(5):\n    print(i)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n0\n1\n2\n3\n4\n```\n:::\n:::\n\n\n---\n\nThe output of the code is executed and included in the document.\n\nSee the [Quarto documentation](https://quarto.org/docs/computations/python.html) for more examples.\n\nFor example, including figures is a really nice feature.\n\n### Matplotlib\n\n::: {.cell execution_count=2}\n``` {.python .cell-code}\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nx = np.linspace(0, 10, 100)\ny = np.sin(x)\n\nplt.plot(x, y)\nplt.xlabel('x')\nplt.ylabel('sin(x)')\nplt.title('A simple plot')\nplt.show()\n```\n\n::: {.cell-output .cell-output-display}\n![A caption can even be included](index_files/figure-pdf/fig-example-output-1.pdf){#fig-example fig-pos='H'}\n:::\n:::\n\n\n### Plotly\n\nAnd it work with plotly too!\n\n::: {#fig-plotly .cell execution_count=3}\n``` {.python .cell-code}\nimport plotly.express as px\n\ndf = px.data.iris()\nfig = px.scatter(df, x=\"sepal_width\", y=\"sepal_length\", \n                 color=\"species\", \n                 marginal_y=\"violin\", marginal_x=\"box\", \n                 trendline=\"ols\", template=\"simple_white\")\nfig.show()\n```\n\n::: {#fig-plotly-1 .cell-output .cell-output-display}\n```\nUnable to display output for mime type(s): text/html\n```\n\nUsing plotly instead of matplotlib\n:::\n\n::: {#fig-plotly-2 .cell-output .cell-output-display}\n```\nUnable to display output for mime type(s): text/html\n```\n:::\n:::\n\n\n",
+    "supporting": [
+      "index_files/figure-pdf"
+    ],
+    "filters": []
+  }
+}

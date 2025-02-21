@@ -6,7 +6,9 @@
 
 # Quarto ignore
 /.quarto/
-_freeze/
+# https://quarto.org/docs/projects/code-execution.html#using-freeze
+#  Don't ignore -- Then code cells aren't re-run in deployment...
+# _freeze/
 _site/
 
 .python-version
