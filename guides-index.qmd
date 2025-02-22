@@ -1,5 +1,6 @@
 ---
 title: "Guides"
+author: ""
 listing:
   contents: guides
   sort: "date desc"
