@@ -1,0 +1,17 @@
+---
+title: "Portfolio"
+author: ""
+listing:
+  contents: portfolio
+  sort: "date desc"
+  # type: default
+  type: grid
+  categories: false
+  sort-ui: false
+  filter-ui: false
+page-layout: full
+title-block-banner: true
+---
+
+This is a collection of projects or parts of projects that I have worked on over time. This is far from an exhaustive list.
+

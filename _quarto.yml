@@ -15,6 +15,7 @@ website:
         text: Profile
       - about.qmd
       - guides-index.qmd
+      - portfolio-index.qmd
   # site-url: https://adventuresoftim.com/quarto/
   site-url: https://adventuresoftim.com/
 
