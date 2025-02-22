@@ -1,0 +1,154 @@
+---
+title: "AthenaInstruments"
+subtitle: "Full web application production ready"
+---
+
+## Introduction
+
+As I was nearing the end of my PhD (quantum computing related condensed matter physics), generative AI really started taking off with the release of ChatGPT. I've had an interest in AI since my early teenage years (over 15 years ago)[^1]. I've dabbled with it here and there over the years, and some of the advancements in the field have been very impressive, but artificial general intelligence has always seemed quite far off (similar to fusion, or quantum computing -- although that's getting closer now too). The recent progression in generative AI really caught my attention though, not for what it is today, but for the possibilities I see for it in the future.
+
+[^1]: In ~2008, I created my first piece of software, a program that used some basic machine vision and hand crafted algorithmic processes to mimic the behavior of a human user interacting with the computer, including solving captcha-like challenges autonomously. This was a fun project, and I've 
+
+Computers have always been very good at doing computer things -- very impressive things -- but always pedantically following instructions of the programmer and working well within the boundaries defined for them[^2]. ChatGPT, on the other hand, gave me a completely different impression. It seemed like it could meaninfully expand on the information I gave it, and it's responses were impressively coherent.
+
+[^2]: They are also execellent at finding every last opportunity to break those boundaries by doing things in exactly the opposite way to what you want, but that you haven't explicitly told them not to do. But this frustrating, not useful.
+
+That feeling was pretty short lived[^3], but possibility stuck in my mind. Although the initial version of ChatGPT was far from a true artificial general intelligence, it suddenly made the gap between computers and humans seem a lot smaller. It was also clear that the technology was approaching a break even point from the perspective of the user. A point at which it is more productive to work with it than without it. More recent advancements have already pushed us beyond that point in many areas, but I think we are still only scratching the surface of what is possible.
+
+
+[^3]: You soon realise that while it's very good at spelling and syntax, it often produces text without much substance.
+
+When I was first using it, there was no customization available, only a chat interface. Once I figured out the some tactics for getting better responses (what has become "prompt engineering") I found it frustrating to keep having to repeat myself, I wanted to be able to set up templates for my workflows. But then, why stop there? There are so many other things that can be done behind the scenes to improve the productivity for the user. The technology was so new that no-one was offering a convenient interface for *any* customization, let alone **good** customization. This is where the idea for AthenaInstruments was born. Why not make it myself?
+
+## The Idea
+
+...
+
+
+
+
+
+## The implementation
+
+So, what has this idea evolved into? This is a brief overview of several key parts of the system. This section is about:
+
+- Giving an overview of the technologies used
+- Discussing the choices made
+- Addressing the scalability of each part
+
+
+### Web application
+
+Use `reflex`, a new python framework that facilitates rapid development of performant Next.js websites with a python `FastAPI` backend and websocket communication between them without having to write significant amounts of javascript. 
+
+This provides a convenient environment to utilize the versatility of python (particularly for new AI libraries) without sacrificing a performant front-end, and without requiring a separate development team. This allows for a faster development cycle with more cohesion at a lower cost.
+
+
+
+
+### Backend
+
+The core of the backend is written in `python`, with an architecture that allows for any bottlenecks to be re-written in a more performant language (`go` or `rust`) as needed. 
+
+::: {.aside}
+For the main workflows, the large language models are the main bottleneck anyway, so python being a slow language is not a significant issue. 
+
+The larger issue with `python` is codebase maintainability, however, that is addressed by the use of linting and static type checking.
+:::
+
+
+
+### Language models
+
+The main language model part of the backend takes advantage of the `LangGraph` library that facilitates graph-based workflows based on Googles [`Pregel`](https://research.google/pubs/pregel-a-system-for-large-scale-graph-processing/) system. This allows for relatively unbounded complexity in the workflows that can be created, while efficiently parallelizing the computational steps.
+
+A lot of the computation work here is currently offloaded to the LangGraph Platform API. They are currently offering a very good value for money service while they expand their user base. In anticipation of price hikes or scaling issues, an adapter layer has been implemented to facilitate an easy switch to a self hosted service if needed.
+
+
+
+
+### User Authentication
+
+User authentication is offloaded to `Clerk` and is integrated directly into the frontend and backend allowing for a seamless user experience and a secure system. 
+
+There is no real limit on scaling here.
+
+
+
+### Persistence
+
+Long term data is stored in a `PostgreSQL` database. Short term data uses a much faster `Redis` database that shared with the `reflex` framework for managing client sessions. 
+
+Initial scaling here can be handled by using more powerful servers. This alone should easily handle up to millions of users. (Additional scaling beyond that will require more work, but is a standard problem with common solutions.)
+
+
+
+### Third party services
+
+Currently, in addition to the integrations that form the core of the system, there are other third party services that have been integrated to provide additional functionality. At the moment, this is limited to:
+
+- `Tavily` for LLM friendly web searching
+- `GitHub` for optimized repository data retrieval
+
+The system is designed to be easily extensible to include a range of additional services. The current limited services are intended to provide a proof of concept for the system's ability to integrate with external services.
+
+Services such as `Tavily` are easy to integrate with, but they are also potentially places where internal implementations could be added to further reduce costs and/or provide more optimized services.
+
+The `GitHub` integration is a good example of a bespoke service offered in AthenaInstruments for which an equivalent is not widely available, and for which a custom implementation is necessary for optimal performance. Currently, a custom data ingestion pipeline is used to create local vectorized representations of the data (including private repositories if the user grants access). Custom tools can be provided to the LLM agents so that they can interact with this data efficiently (while ensuring no data leakage between users).
+
+This also provides an opportunity to implement organizations or workspaces that allow data to be efficiently shared between users within the same organization.
+
+Future integrations are planned with services such as:
+
+- **Storage**: 
+  - `Google Drive`
+  - `Dropbox`
+  - `OneDrive`
+- **Communication**:
+  - `Slack` for team communication
+  - `Discord` for community building
+- **Project Management**:
+  - `Jira` for project management
+  - `Confluence` for documentation
+  - `Notion` for note-taking
+  - `Trello` for task management
+- **CRM and Support**:
+  - `Salesforce` for CRM
+  - `Zendesk` for customer support
+- **Marketing**:
+  - `Mailchimp` for email marketing
+  - `Hubspot` for marketing automation
+- **Analytics**:
+  - `Google Analytics` for web analytics
+  - `Hotjar` for user behavior analytics
+
+::: {.callout-note}
+I believe that building these integrations in-house will be crucial to optimizing the performance of the system when integrated with various LLMs. Additionally, I believe that offering a few well-integrated services will be more valuable to users than the approach that many of the larger companies are taking, where they leave it up to external developers to build integrations with their services.
+:::
+
+
+
+### Deployment
+
+Deployment is currently handled via automated GitHub Actions workflows that build and deploy first to a staging server, and only to a production server after an automated test suite has passed.
+
+This ensures a high level of reliability of the user-facing service, while still allowing for continuous deployment of new features, security updates, and bug fixes. It's currently possible to patch and deploy a fix in under 15 minutes with no downtime and cutting no corners on the standard security and testing protocols. 
+
+The deployed service is currently hosted on a single DigitalOcean virtual private server with docker compose managing the various services that run in tandem. This is cost-effective at this early stage, and the various services are all designed with future scaling via a kubernetes cluster deployment in mind. Although, even a simple load balancer would be sufficient for a significant scale up.
+
+
+### Monitoring
+
+Live monitoring is an area that is currently lacking, however, there are several interfaces already implemented that allow for manual monitoring and management of the system. Future work to implement a more automated approach is planned, but not yet a priority.
+
+
+### Security
+
+Security is a top priority, and the system has been designed with security in mind from the ground up. All network communication is encrypted end-to-end, and all persistent user data is stored encrypted at rest. Additionally, because Clerk is used for user authentication, there is no possibility to leak sensitive user data as it is never persisted in our system.
+
+All interactions with large language model providers are anonymized and encrypted.
+
+Still, a significant amount of work will likely be required in preparation for a security audit before obtaining certification of security compliance.
+
+
+
