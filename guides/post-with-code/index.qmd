@@ -2,6 +2,7 @@
 title: "Posts that include executable code"
 date: "2025-02-12"
 categories: [quarto, dotfiles]
+image: cover.webp
 ---
 
 ## Executing code with quarto

@@ -2,6 +2,7 @@
 title: "Adding a post"
 date: "2025-02-12"
 categories: [quarto, dotfiles]
+image: cover.webp
 ---
 
 # How to add more posts

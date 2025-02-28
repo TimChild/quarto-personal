@@ -2,6 +2,7 @@
 title: "Adding a site with a backend"
 date: "2025-02-15"
 categories: [webserver]
+image: cover.webp
 ---
 
 ## Overview

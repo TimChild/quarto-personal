@@ -2,6 +2,7 @@
 title: "Adding a static site"
 date: "2025-02-15"
 categories: [webserver]
+image: cover.webp
 ---
 
 ## Overview
