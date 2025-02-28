@@ -2,7 +2,9 @@
 title: "Setting up a webserver"
 date: "2025-02-13"
 categories: [webserver]
+image: cover.webp
 ---
+
 
 ## Setting up a new webserver
 
