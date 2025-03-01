@@ -1,0 +1,48 @@
+---
+title: "Admin dashboard"
+subtitle: "A simple dashboard for quickly managing simple database tasks."
+image: cover.webp
+---
+
+![](cover.webp)
+
+## Why make an admin dashboard?
+
+There are several ways to manage the contents of a database. A powerful one for postgreSQL is `pgAdmin`. However, for very simple tasks, like looking contents of a specific table, or modifying specific rows, it's nice to have a simpler interface that is more easily accessible. 
+
+
+## What is the admin dashboard?
+
+The admin dashboard is a simple web built using [`starlette-admin`](https://jowilf.github.io/starlette-admin/) to provide a lightweight and customizable view of specific database tables using the same framework that `FastAPI` is built on. 
+
+> Fast, beautiful, and extensible administrative interface framework for Starlette & FastApi applications -- [starlette-admin](https://jowilf.github.io/starlette-admin/)
+
+
+## Setup and Configuration
+
+For AthenaInstruments, the admin dashboard is hosted by the same webserver that hosts the `FastAPI` backend of the main site, but uses a separate authentication system utilizing google oauth to ensure that only specific authorized admins can access it.
+
+To set up the various table views, `ModelView`s are created and associated with the appropriate SQLAlchemy declarative models defined in the backend. For tables that contain only basic data types, there is very little additional configuration required, although customizations such as how many rows are displayed per page, or which columns should be filterable etc. can be specified. 
+
+For table columns that are foreign keys to other tables, `starlette-admin` will automatically create links to the relevant views as long as those tables also have `ModelView`s defined.
+
+For columns that aren't basic data types, such as lists of Enums, some minimal additional configuration is required. E.g.:
+
+
+```python
+class UserView(ModelView):
+    identity = "user"
+    page_size = 20
+    page_size_options = [10, 20, 50, 100]
+    fields = [
+        *make_default_model_fields(User, exclude=["roles"]),
+        ListField(EnumField("roles", enum=UserRoles)),
+    ]
+    exclude_fields_from_list = [User.conversations]
+    sortable_fields = [User.id, User.email, User.credits]
+    searchable_fields = [User.email, User.clerk_id, User.first_name, User.last_name]
+```
+
+
+
+
