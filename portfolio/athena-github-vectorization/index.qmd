@@ -1,0 +1,64 @@
+---
+title: "Vectorizing GitHub data"
+subtitle: "Creating an optimized retrieval process for GitHub data"
+image: cover.webp
+---
+
+![](cover.webp)
+
+## Why is GitHub data important?
+
+GitHub contains a wealth of information that can be extremely useful as additional context for large language models to use when generating output. Public repositories contain information about popular libraries and frameworks, and private repositories can contain the projects that the end user is currently working on. 
+
+Therefore, a fast an efficient means of retrieving useful information from such repositories is essential for a platform such as [AthenaInstruments](../athenainstruments/index.qmd). 
+
+
+## What do I mean by vectorizing?
+
+There are many approaches to finding relevant information within a GitHub repository, however, most are not particularly efficient for a computer to use. Let's imagine we are trying to implement a new method of user authentication in an application. To do this, we want to find out how the current methods of authentication are implemented so that we can follow the same pattern.
+
+Ideally, we want to find the relevant class or function that is responsible for this directly. This is something a human could potentially do. If they have intimate knowledge of a repository, they may already know exactly where that code is within a specific file. However, this relies upon at least having a good memory of the entire repository, something that our model is unlikely to have (even if it has a good rough idea of the content from prior training for example).
+
+::: {.aside}
+While context limits of new models are ever increasing, and it is becoming technically possible to feed in whole repositories as context, it's still a very inefficient way to retrieve information, and is likely to drastically increase costs or slow down the response time of the model.
+:::
+
+On the other end of the scale, a new developer seeing the repository for the first time might take a very different approach: reading through the documentation first, and then navigating between several files and functions etc. before finding the relevant code. The next time they need to do something similar, they'll be much faster too. This is a great way to learn about a new codebase, but since our LLM is not capable of learning in the same way, it's going to be slow an inefficient process to follow this linear process for every single response.
+
+We need a computer friendly way to find the relevant information quickly. This is where vectorization comes in. We can somewhat mimic the memory of an experienced developer by creating a vector representation of each small piece of information in the repository. When we want to find a particular piece of information, we look for the vectors from the repository that are most similar to vector representation of the question we are asking[^1].
+
+[^1]: E.g., A description of a cat is in some way similar to asking about what a cat is.
+
+To do this vectorization, we use embedding models. These models are trained to take a piece of text and convert it into a vector representation that encodes the meaning of the text in a high dimensional space.
+
+
+## Considerations for the implementation
+
+Embedding the content of an entire repository is not a trivial task. There are many things to consider when designing as system to do this:
+- How should data be pulled from GitHub efficently?
+- How should the contents be split up for embedding?
+- What additional information should be stored alongside the content and embeddings?
+- What should happen if and when parts of the repository are updated?
+- How can we prevent duplication of work?
+- How can we handle API rate limits?
+- How can we handle scaling up the system?
+- How do we ensure that private repository data is kept secure?
+- ...
+
+All of these questions play into the design of the system through a combination of strict constraints and trade-offs. On top of the domain driven design, there are also technical considerations, and the need to keep the system maintainable and extensible.
+
+
+## A rough idea of the implmentation
+
+Without going into too much detail, I'll give a rough idea of how some of the above questions are implemented in the AthenaInstruments system.
+- `GraphQL` queries are used to efficiently interact with the GitHub API -- There are queries that are optimized for retrieving large amounts of data for initial vectorization, and others that are optimized for determining and retrieving only the changed pieces of data between commits or branches.
+- The contents of each file are split into chunks differently depending on the type of file -- For example, a simple text file is split roughtly into paragraphs, whereas a markdown file is preferably split into sections and subsections.
+- For certain file types, the contents are split up in several ways simultaneously to improve the accuracy of searching with different query types.
+- Code files are parsed using concrete syntax trees generated by [`Tree-sitter](https://tree-sitter.github.io/tree-sitter/) to extract meaningful metadata about the code that can be used for efficient filtering and additional context.
+- Embeddings are generated in batches via third party APIs.
+- The embeddings for vector searching are stored in a [`Qdrant`](https://qdrant.com/) database, which is optimized for high dimensional vector searching with additional optimizations applied for specific metadata fields.
+- The data content is stored in a `PostgreSQL` database for efficient storage and relational lookups.
+- A separate pipeline is used to update stored data and embeddings upon changes to the repository in a fast and efficient manner.
+- The system is designed in a way that any local processing bottleneck can be easily re-implemented in `go` as an external micro-service for much better performance and scalability.
+
+This is just a high level overview of a few aspects of the system. There are many more details that could be discussed.
