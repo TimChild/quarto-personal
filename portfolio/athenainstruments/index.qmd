@@ -1,10 +1,13 @@
 ---
-draft: true
-title: "AthenaInstruments"
-subtitle: "Full web application production ready"
+draft: false
+title: "AthenaInstruments Overview"
+subtitle: "A production ready generative AI platform"
+image: cover.webp
 ---
 
-## Introduction
+![](cover.webp)
+
+## Why build AthenaInstruments in the first place?
 
 As I was nearing the end of my PhD (quantum computing related condensed matter physics), generative AI really started taking off with the release of ChatGPT. I've had an interest in AI since my early teenage years (over 15 years ago)[^1]. I've dabbled with it here and there over the years, and some of the advancements in the field have been very impressive, but artificial general intelligence has always seemed quite far off (similar to fusion, or quantum computing -- although that's getting closer now too). The recent progression in generative AI really caught my attention though, not for what it is today, but for the possibilities I see for it in the future.
 
@@ -19,14 +22,18 @@ That feeling was pretty short lived[^3], but possibility stuck in my mind. Altho
 
 [^3]: You soon realise that while it's very good at spelling and syntax, it often produces text without much substance.
 
-When I was first using it, there was no customization available, only a chat interface. Once I figured out the some tactics for getting better responses (what has become "prompt engineering") I found it frustrating to keep having to repeat myself, I wanted to be able to set up templates for my workflows. But then, why stop there? There are so many other things that can be done behind the scenes to improve the productivity for the user. The technology was so new that no-one was offering a convenient interface for *any* customization, let alone **good** customization. This is where the idea for AthenaInstruments was born. Why not make it myself?
+When I was first using it, there was no customization available, only an extremely basic chat interface. Once I figured out the some tactics for getting better responses (what has become "prompt engineering") I found it frustrating to keep having to repeat myself and copy and paste over and over, I wanted to be able to set up templates for my workflows. But then, why stop there? There are so many other things that can be done behind the scenes to improve the productivity for the user. The technology was so new that no-one was offering a convenient interface for *any* customization, let alone **good** customization. This is where the idea for AthenaInstruments was born. Why not make it myself?
+
 
 ## The Idea
 
-...
+The overall idea was to make an easily accessible platform where a user can easily create custom workflows utilizing generative AI without being tied to a single provider, and with additional tools built in that enhance the capabilities of the generative AIs. 
 
+I decided to create a responsive web application so that the platform would be easily usable on any device (mobile, tablet, laptop, desktop). Python seemed like a good initial choice for the primary language of the application to best take advantage of new AI tools and frameworks being built by others[^4].
 
+[^4]: For example langchain was taking off as a way to abstract some of the differences between various LLM providers.
 
+The application would look like the familiary chat interface offered by others, but crucially, with additional controls/pages that are easily accessible for an interested user to be able to implement various customizations. These customizations would include the ability to template specific workflows, as well as to integrate various tools and internal and external resources. 
 
 
 ## The implementation
