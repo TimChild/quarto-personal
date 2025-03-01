@@ -1,6 +1,6 @@
 ---
 draft: false
-title: "AthenaInstruments Overview"
+title: "AthenaInstruments overview"
 subtitle: "A production ready generative AI platform"
 image: cover.webp
 ---
