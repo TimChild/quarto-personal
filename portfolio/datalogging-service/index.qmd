@@ -1,0 +1,169 @@
+---
+draft: true
+title:
+date: 2025-03-03
+title: "A simple data-logging service with Golang"
+---
+
+## TODOs
+
+- Generate image -- thermometer that merges into a log with a plain background 
+- Can I use something like a `!uv pip install` command within a quarto doc?
+- Continue writing about go API
+	- Maybe show the `main()` func -- Showing adding handlers, graceful shutdown, channel for triggering when running etc. -- Helpful in tests
+	- Talk about testing and the config the allows specifying a TestConfig
+	- Config as a .go file for ease while it's small. If it was larger, it might be more maintainable/user friendly to use a TOML file, and then unmarshall it in Go, but then I just have to define the same structure twice.
+	- Show the Dockerfile for multi-stage build of the service for reproducibly running in a container
+		- Ideally show the size difference between a single stage and multi-stage build.
+- Write about the RPi Python service
+	- Measurement devices can be connected via GPIO (or other ways, but this is particularly convenient on RPi/arduino type devices). 
+	- The choice of RPi makes it easy to use a python script and has some benefits with setting up initial wifi connection when prototyping locally. It's definitely massively overkill for what it needs to do. I'd definitely re-write in C for use on a much simpler and cheaper arduino if an significant scale is required, but for now, the ease of python is a good compromise.
+	- The python script is simple but effective
+		- Some error handling
+		- Should add a rolling log (so that data can be uploaded when connection resumes if internet is lost)
+		- Should start recording it's own timestamp (and then the server can store both server time and node time)
+		- POSTs data to the endpoint periodically.
+
+
+## A simple data-logging service with Golang
+
+For a side project, I needed a way to log environmental data in remote locations to a central database where the information can be viewed easily. I'm sure there are pre-built solutions out there for this, but I thought it would be a good opportunity to try out combining a few simple technologies and scripts. The following is an overview of that work.
+
+Click [here](https://ceraserver.adventuresoftim.com/dashboard) to see it in action. 
+
+The solution is broken down into three main parts:
+- An API that can store data logs from any of the edge devices
+- The data-logger itself that can run on a cheap piece of hardware anywhere.
+- A dashboard for viewing the logged information
+- A way to make these services available online
+
+Tldr;
+- The data-logger is a python script that runs on a Raspberry Pi that is set up to run the service automatically on boot up. It sends POST requests to a web API to upload data when it gets an internet connection.
+- The API service is provided by a Golang program running in a minimal docker container that is hosted on a [DigitalOcean](https://digitalocean.com) droplet (virtual private server), and records the data to an sqlite database (after some basic authentication checks).
+- The dashboard is a [`Reflex`](https://reflex.dev) application, combining a Next.js frontend application, and a FastAPI backend to provide a single page application (SPA) that can interactively view the data recorded in the sqlite database. 
+- A [CaddyXXX](XXX) docker container serves the Next.js frontend and reverse proxies both the Go API and the FastAPI backend. Providing automatic SSL management for secure communications.
+
+Below is a slightly deeper dive into each of the separate parts. 
+## The Go API
+
+Starting with the API, I just need something that allows me to easily upload various types of data with minimal fuss. The Go language has great built in support for building a HTTP server, as well as integrating with a database. It's also extremely fast and efficient. I'm not expecting to be working with a lot of data, but even if things scaled up massively, Go would remain a great choice.
+
+In the end, I want to be able to log a range of parameters, but for simplicity, we'll just discuss recording the ambient temperature. For this, we need an API endpoint:
+
+```https://example.com/v1/log-temperature
+```
+
+::: {.callout-note}
+I've added the `v1` path parameter to make it easy to introduce a new version with otherwise breaking changes without actually breaking any loggers that rely on this initial implementation.
+:::
+
+We'll make this accept POST requests and send a simple JSON datastructure:
+
+```json
+{
+"temperature": !float,
+"timestamp": !XXXRFC,
+"status": string,
+}
+```
+
+In addition, we'll include some headers in the request that act as identification of the node and authorization to post to this endpoint:
+
+```
+Content-Type: application/json
+X-authorization: <crypt key>
+X-node-id: <uuid>
+```
+
+Similar endpoints can then be added for any other parameters that should be logged.
+
+
+### The `main` function
+
+We can get a good overview of how the go program works by looking at the main function. The `main.go` file is where the various parts of the program are organized together to form a complete application. 
+
+I'll discuss each part of the `main.go` file in parts below, the full file can be found [at the bottom of the page](#full-main-contents)
+
+Starting with the imports
+```go
+INSERT IMPORT BLOCK HERE
+```
+
+We can see that we are importing other parts of the project following a file structure that helps keep things organised. The file structure looks like:
+
+```
+COPY THE relevant parts of `TREE` HERE
+```
+
+
+The `main` function itself is:
+```go
+func main()
+COPY IN THE REST HERE
+```
+
+As you can see, the main function doesn't do much more than call the `run` function. This makes it convenient to test the application logic that lies within `run`. I discuss some basic testing [here XXX](#link to testing).
+
+Now let's look at the `run` function where the application logic lies. We first initialize the database, creating it if necessary.
+
+```go
+func run () {
+
+	SHOW THE FIRST PART OF THE RUN FUNCTION -- SETTING UP THE DB
+...
+```
+
+Then we start setting up the http server by adding handlers
+
+```go
+...
+SHOW THE ADDING HANDLERS PART
+...
+```
+
+A very simple `healthcheck` handler make it easy to determine whether the service is running. 
+
+::: {.aside}
+The `healthcheck` handler is:
+
+```go
+HEALTHCHECK HANDLER
+```
+:::
+
+The log temperature handler is defined in a separate file that we'll [look at later XXX](#link to later section). For now, we'll continue looking at setup of the server.
+
+Next, we start the http server as a goroutine:
+
+```go
+SHOW THE GOROUTINE FOR THE HTTP SERVER
+```
+
+We send a signal back on the `XXX` channel that the server is started, primarily as helpful signal for tests to be able to wait until the server is ready before proceeding[^2])
+
+[^2]: A simpler but less robust alternative to using a channel and waiting for a signal is just to wait for some fixed time after telling the server to start before sending requests, and hoping that it will be ready in time. The problem with this is that setting a longer wait time delays the test unnecessary every single time it is run (which should be *very* often), but setting too short of a time could cause flaky or system dependent test failures (every developers worst nightmare), for example due to a less powerful machine running the tests in CI.  
+
+
+Now the server will being running forever. This alone would work, but it's better if we can provide a means to shutdown gracefully when possible. To do so we wait for interrupt signals:
+
+```go
+SHOW INTERRUPT AND GRACEFUL SHUTDOWN STUFF
+```
+
+This allows us to stop the server with  `Ctrl+c` , and the program will let us know that the graceful shutdown was successful by a log to the console.
+
+That's how the overall http server works, now let's take a quick look at the `main_test.go` file to see how this can be tested locally.
+
+
+### Testing main.go (MIGHT NEED A TAG HERE?>)
+
+....
+
+
+### Full main contents
+
+Here is the full `main.go` file contents in one chunk.
+
+```go
+INSERT MAIN.GO HERE
+```
