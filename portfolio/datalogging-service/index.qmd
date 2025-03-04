@@ -1,8 +1,7 @@
 ---
 draft: true
-title:
-date: 2025-03-03
 title: "A simple data-logging service with Golang"
+date: 2025-03-03
 ---
 
 ## TODOs
