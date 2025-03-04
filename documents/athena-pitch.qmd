@@ -21,9 +21,9 @@ Here's a short overview of some of the problems that currently exist in the gene
 
 **AthenaInstruments** is a platform that tackles these problems without re-inventing the wheel.
 
-We want to provide users an easy way to work at the cutting edge of generative AI without needing to be an expert in the field, or to re-build their workflows on a weekly basis. 
+I want to provide users an easy way to work at the cutting edge of generative AI without needing to be an expert in the field, or to re-build their workflows on a weekly basis. 
 
-At the same time, we want to let the user have access to the customizations they are most interested in.
+At the same time, I want to let the user have access to the customizations they are most interested in.
 
 The general idea is to build a platform that works well for a range of tasks right out of the box, seamlessly taking advantage of the best models from any provider on any given day. And then to expose the tools that allow us to provide this service in a way that an interested user can tweak an existing service to their needs, or build a whole new service from scratch if they so desire.
 
@@ -48,13 +48,13 @@ The differences will all be behind the scenes:
   - If all we need to do is respond to a simple "hello", it could pick a fast a friendly model -- maybe this week the best for that is Claude-Haiku -- and it's response can be returned directly, and quickly.
   - If the task is more complex -- say a user wants to generate a report on a topic -- it seamlessly hands off to a more sophisticated workflow that can produce a fully formatted PDF report.
 - Before producing a report, and even before calling any LLMs, we can first draw on a range of other services to gather some preliminary data quickly.
-  - E.g., Loading recent news articles, searching the web, checking if the user has previouslydiscussed this topic or given preferences as to how they like their reports formatted, etc.
+  - E.g., Loading recent news articles, searching the web, checking if the user has previously discussed this topic or given preferences as to how they like their reports formatted, etc.
   - This can all be done in parallel, and typically takes less than 1 second.
 - Now, we are ready to get a first draft of the report. We call on the best models from each of OpenAI, Google, and Anthropic simultaneously to get their best drafts.
   - Again this happens in parallel, and we can -- for example -- decide that if we've already got two answers back, that we don't need to wait for the third.
-- Then, we ask another agent that is specifically setup (and trained) to generate report content based on those answers and the most relevant data we've gathered so far.
-  - At this point, this agent could also decide that the drafts aren't good enough yet, and first demand a better draft from the LLMs while giving it's feedback to them, or it could present a friendly prompt to the user to provide some key missing data.
-- Finally, a custom service converts the report into a PDF and attaches it to the message that is sent back to the user.
+- Then, we ask another agent that is specifically set up (and trained) to generate report content based on those answers and the most relevant data we've gathered so far.
+  - At this point, the agent could also decide that the drafts aren't good enough yet, and first demand a better draft from the LLMs while giving it's feedback to them, or it could present a friendly prompt to the user to provide some key missing data.
+- Finally, a custom service converts the report into a PDF and attaches it to the message that is sent back to the user along with a summary of the steps taken and the key findings.
 
 [^1]: I expect several of the offerings from the big players take a similar approach, but we have the advantage of having access to **all** of them.
 
@@ -64,30 +64,30 @@ For a power user, the platform will provide a friendly interface that exposes al
 
 For example, a project manager that would like morning coffee updates on the progress of a project, but doesn't want to bog down their team with the task of coming together to produce a one page summary every day. They know that what they'd really like can be boiled down to a process like:
 
-- Gather data for project X and employees Anna, Bob, and Charlie:
+- Gather data for project X and employees Anna, Bob, and Charlie from:
   - The latest commits in GitHub
   - The latest issues opened/closed in Jira
   - The latest messages in the project Slack channel
-- Also look at the last weeks worth of morning summaries (and whether I gave any feedback on those)
+- Also look at the last weeks worth of morning summaries (and whether any feedback on those was given)
 - Generate a new morning summary for today
 
-They can spend some extra time at the beginning of the project to set this custom workflow up. It might look something like this: 
+They can spend some extra time at the beginning of the project to set this custom workflow up. The process could look something like this: 
 
-- There are already agents that are good at getting data from each of GitHub, Jira, and Slack, so let's select those for the main agent, and then in plain english say:
+- The PM sees that there are already agents that are good at getting data from each of GitHub, Jira, and Slack, so adds those to the main agent, and then in plain english says:
   "I want you to call the GitHub, Jira, and Slack agents simultaneously for project X over the last 48 hours for employees Anna, Bob, and Charlie and see what's new."
-- There's also a tool for searching previous messages, so let's add that option, and continue descrbing what we want:
+- There's also a tool for searching previous messages, so they add that option, and continue descrbing what they want:
   "You should also get the last weeks worth of morning summaries and see if I gave you any feedback on those that you should take into account for this report."
-- There is also a report generating agent, so we'll add that too and say:
+- There's already a report generating agent, so they add that too and say:
   "Once you have all that data, generate a new morning summary for today. I want to know what progress was made yesterday, what's planned for today, whether anyone is blocked, or likely to be blocked soon, and any other relevant information."
 
-That's enough to get started, and if the summary isn't quite right on the first day, they can just give some feedback and get an updated version right then, and the next day it will already know to take that feedback into account. 
+That's enough to get started, and if the summary isn't quite right on the first day, they can just give some feedback and get an updated version right then, and the next day the custom agent will already know to take that feedback into account. 
 
-Even once that feedback was given 3 weeks ago and isn't directly collected in the data gathering step for this morning report, since it can still see the last weeks worth of morning summaries, it's going to produce a report that is similar in form and quality to those, so it's probably going to be pretty good anyway. And, if what you really want to see changes over time, it will change with you, even without needing to update the workflow.
+Even 3 weeks into the project, when that initial feedback won't be directly collected in the data gathering step for that days morning report, since the agent will still see the last weeks worth of morning summaries, it's going to produce a report that is similar in form and quality to those, so it's probably going to still be following that earlier advice. And, if what you really want to see changes over time, it will change with you, even without needing to update the workflow.
 
 
 ## Tech stack
 
-Now we'll break down the various parts of the system:
+Now I'll break down the various parts of the system:
 
 - Give an overview of the technologies used
 - Discuss the choices made
@@ -96,7 +96,7 @@ Now we'll break down the various parts of the system:
 
 ### Web application
 
-Use `reflex`, a new python framework that facilitates rapid development of performant Next.js websites with a python `FastAPI` backend and websocket communication between them without having to write significant amounts of javascript. 
+I use `reflex`, a new python framework that facilitates rapid development of performant Next.js websites with a python `FastAPI` backend and websocket communication between them. This largely achieved in pure python, although tweaks can be made easily with added javascript.
 
 This provides a convenient environment to utilize the versatility of python (particularly for new AI libraries) without sacrificing a performant front-end, and without requiring a separate development team. This allows for a faster development cycle with more cohesion at a lower cost.
 
