@@ -2,6 +2,7 @@
 title: "Vectorizing GitHub data"
 subtitle: "Creating an optimized retrieval process for GitHub data"
 image: cover.webp
+date: "2025-03-02"
 ---
 
 ![](cover.webp)
