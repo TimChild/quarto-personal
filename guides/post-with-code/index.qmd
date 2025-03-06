@@ -11,7 +11,7 @@ Quarto makes it easy to include executable code within documents. For example:
 
 Including
 ````md
-```python
+```{{python}}
 for i in range(5):
     print(i)
 ```
@@ -24,9 +24,14 @@ for i in range(5):
     print(i)
 ```
 
----
 
 The output of the code is executed and included in the document.
+
+::: {.callout-note}
+The `{}` syntax around the `python` is important for quarto to know to execute the code rather than only display the markdown for it.
+
+Use `{{{python}}}` to show `{python}` in the rendered output without actually executing it as code.
+:::
 
 See the [Quarto documentation](https://quarto.org/docs/computations/python.html) for more examples.
 
