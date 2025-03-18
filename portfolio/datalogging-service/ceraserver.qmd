@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "A simple data-logging service with Golang"
-date: "2025-03-03"
+date: "2025-03-18"
 ---
 
 ![](./cover_1.webp)
@@ -127,7 +127,7 @@ Similar endpoints can then be added for any other parameters that should be logg
 
 We can get a good overview of how the go program works by looking at the main function. The `main.go` file is where the various parts of the program are organized together to form a complete application. 
 
-I'll discuss each part of the `main.go` file in parts below, the full file can be found [at the bottom of the page](#full-main-contents)
+I'll discuss each part of the `main.go` file in parts below, the full file can be found [here](https://github.com/TimChild/ceraserver/blob/main/main.go).
 
 Starting with the imports
 ```go
@@ -181,7 +181,7 @@ func main() {
 }
 ```
 
-It doesn't do much more than call the `run` function. This makes it convenient to test the application logic that lies within `run`. I discuss some basic testing [below](@sec-testing-main).
+It doesn't do much more than call the `run` function. This makes it convenient to test the application logic that lies within `run`. I discuss some basic testing [below](#sec-testing-main).
 
 Now let's look at the `run` function where the application logic lies. We first initialize the database, creating it if necessary.
 
@@ -425,32 +425,46 @@ This is a very simple example, but demonstrates a basic template that can be use
 
 ## Containerization of the Go API
 
+The Go Application is deployed to the server as a docker container. A multi-stage build is used to keep the final image small.
+
+```Dockerfile
+FROM golang:1.24-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY . .
+
+RUN apk add --no-cache gcc musl-dev
+
+RUN CGO_ENABLED=1 go build -o main .
+
+FROM alpine:latest
+
+WORKDIR /root/
+
+COPY --from=builder /app/main .
+
+EXPOSE 8080
+
+CMD ["./main"]
+```
+
+Everything up to the second `FROM` statement is the build stage, where we aren't worried about the image size as it will be only be used temporarily. This is where we can have `go` and additional packages required for building installed. Then, in the final image, we copy accross only the built binary and run it. By doing this, the final image is only 20 MB. Had we done a single stage build only, it would be 557 MB (30X larger!!). 
+
+Being able to build the binary is a massive advantage over a language like Python, where even a very minimal image would be ~ 100 - 200MB in size. Of course, there is also an enormous speed advantage to Go as well.
+
+I'll discuss the automated deployment of the docker container in a future post.
+
 
 ## Summary
 
 Although I've skipped over some of the details, I hope this give a good overview of the structure for a simple web accessible API, and an idea of some of the considerations that need to be made when designing such a program.
 
 Stay tuned for write-ups on the other parts of the full system, including the Raspberry Pi data-logger, the Reflex dashboard, deployment pipeline, etc.
-
-
-
-## RPi Service
-
-The 
-
-- Write about the RPi Python service
-	- Measurement devices can be connected via GPIO (or other ways, but this is particularly convenient on RPi/arduino type devices). 
-	- The choice of RPi makes it easy to use a python script and has some benefits with setting up initial wifi connection when prototyping locally. It's definitely massively overkill for what it needs to do. I'd definitely re-write in C for use on a much simpler and cheaper arduino if an significant scale is required, but for now, the ease of python is a good compromise.
-	- The python script is simple but effective
-		- Some error handling
-		- Should add a rolling log (so that data can be uploaded when connection resumes if internet is lost)
-		- Should start recording it's own timestamp (and then the server can store both server time and node time)
-		- POSTs data to the endpoint periodically.
-
-
-### Full main contents
-
-Here is the full `main.go` file contents in one chunk.
 
 
 ```go
