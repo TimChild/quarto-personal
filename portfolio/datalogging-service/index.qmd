@@ -1,48 +1,98 @@
 ---
-draft: true
+draft: false
 title: "A simple data-logging service with Golang"
 date: "2025-03-03"
 ---
 
+![](./cover2.webp)
+
 ## TODOs
 
-- Generate image -- thermometer that merges into a log with a plain background 
-- Can I use something like a `!uv pip install` command within a quarto doc?
 - Continue writing about go API
-	- Maybe show the `main()` func -- Showing adding handlers, graceful shutdown, channel for triggering when running etc. -- Helpful in tests
 	- Talk about testing and the config the allows specifying a TestConfig
 	- Config as a .go file for ease while it's small. If it was larger, it might be more maintainable/user friendly to use a TOML file, and then unmarshall it in Go, but then I just have to define the same structure twice.
 	- Show the Dockerfile for multi-stage build of the service for reproducibly running in a container
 		- Ideally show the size difference between a single stage and multi-stage build.
-- Write about the RPi Python service
-	- Measurement devices can be connected via GPIO (or other ways, but this is particularly convenient on RPi/arduino type devices). 
-	- The choice of RPi makes it easy to use a python script and has some benefits with setting up initial wifi connection when prototyping locally. It's definitely massively overkill for what it needs to do. I'd definitely re-write in C for use on a much simpler and cheaper arduino if an significant scale is required, but for now, the ease of python is a good compromise.
-	- The python script is simple but effective
-		- Some error handling
-		- Should add a rolling log (so that data can be uploaded when connection resumes if internet is lost)
-		- Should start recording it's own timestamp (and then the server can store both server time and node time)
-		- POSTs data to the endpoint periodically.
 
 
 ## A simple data-logging service with Golang
 
-For a side project, I needed a way to log environmental data in remote locations to a central database where the information can be viewed easily. I'm sure there are pre-built solutions out there for this, but I thought it would be a good opportunity to try out combining a few simple technologies and scripts. The following is an overview of that work.
+For a side project, I needed a way to log environmental data in remote locations to a central database where the information can be viewed easily. I thought this would be a good opportunity to try combining a few simple technologies to achieve a solution that is fully customisable to my needs[^1]. The following is an overview of that work.
 
-Click [here](https://ceraserver.adventuresoftim.com/dashboard) to see it in action. 
+[^1]: For visualization alone, I'd recommend using [Graphana](https://grafana.com/), as that is excellent for visualizing database timeseries data.
 
-The solution is broken down into three main parts:
+An overview of the system is shown below.
+
+
+
+```{mermaid}
+graph TD
+    subgraph Server
+        Caddy[Caddy] -->|Reverse Proxy| GoAPI[Go API]
+        Caddy <-->|Serves Static Files| RF[Reflex Frontend Next.js]
+        Caddy -->|Reverse Proxy| RB[Reflex Backend FastAPI]
+        GoAPI <-->|Read/Write| SQLite[SQLite Database]
+	SQLite -->|Read Only| RB
+    end
+
+    RPi[Raspberry Pi] -->|HTTPS POST| Caddy
+    User[User Device] <-->|HTTPS| Caddy
+    User <---->|Websocket Connection| RB
+
+    classDef darkMode fill:#444,stroke:#fff,stroke-width:1px,color:#fff;
+    classDef piStyle fill:#8b008b,stroke:#333,stroke-width:2px,color:#fff;
+    classDef userStyle fill:#4682b4,stroke:#333,stroke-width:2px,color:#fff;
+
+    class RPi piStyle;
+    class User userStyle;
+    class Caddy,GoAPI,RF,RB,SQLite darkMode;
+
+    classDef frontendLink stroke:#8b008b,stroke-width:2px
+
+    linkStyle 0,5 stroke:#8b008b,stroke-width:2px
+    linkStyle 1,2,6 stroke:#4682b4,stroke-width:2px
+    linkStyle 7 stroke:#4682b4,stroke-width:2px,stroke-dasharray: 5 5
+```
+
+[This link](https://ceraviz.adventuresoftim.com/) will take you to the frontend to see an example of the logged data.
+
+In terms of the data flow, it's very simple.
+
+```{mermaid}
+sequenceDiagram
+    participant RP as Raspberry Pi
+    participant Go as Go API
+    participant DB as SQLite Database
+    participant FE as Reflex Backend
+    participant User
+
+    RP->>Go: Send API Request
+    Go->>DB: Query/Write Data
+    DB-->>Go: Return Data/Confirmation
+    Go-->>RP: Send Response
+    User->>FE: Send Request
+    FE->>DB: Request Data
+    DB-->>FE: Send Data
+    FE-->>User: Send Data
+```
+
+
+Overall, the solution is broken down into a few main parts:
+
 - An API that can store data logs from any of the edge devices
 - The data-logger itself that can run on a cheap piece of hardware anywhere.
 - A dashboard for viewing the logged information
 - A way to make these services available online
 
 Tldr;
+
 - The data-logger is a python script that runs on a Raspberry Pi that is set up to run the service automatically on boot up. It sends POST requests to a web API to upload data when it gets an internet connection.
 - The API service is provided by a Golang program running in a minimal docker container that is hosted on a [DigitalOcean](https://digitalocean.com) droplet (virtual private server), and records the data to an sqlite database (after some basic authentication checks).
 - The dashboard is a [`Reflex`](https://reflex.dev) application, combining a Next.js frontend application, and a FastAPI backend to provide a single page application (SPA) that can interactively view the data recorded in the sqlite database. 
 - A [CaddyXXX](XXX) docker container serves the Next.js frontend and reverse proxies both the Go API and the FastAPI backend. Providing automatic SSL management for secure communications.
 
 Below is a slightly deeper dive into each of the separate parts. 
+
 ## The Go API
 
 Starting with the API, I just need something that allows me to easily upload various types of data with minimal fuss. The Go language has great built in support for building a HTTP server, as well as integrating with a database. It's also extremely fast and efficient. I'm not expecting to be working with a lot of data, but even if things scaled up massively, Go would remain a great choice.
@@ -60,9 +110,9 @@ We'll make this accept POST requests and send a simple JSON datastructure:
 
 ```json
 {
-"temperature": !float,
-"timestamp": !XXXRFC,
-"status": string,
+"temperature": number,
+"timestamp": string, // RFC3339 format,
+"status": string // optional,
 }
 ```
 
@@ -85,30 +135,67 @@ I'll discuss each part of the `main.go` file in parts below, the full file can b
 
 Starting with the imports
 ```go
-INSERT IMPORT BLOCK HERE
+package main
+
+import (
+	"ceraserver/config"
+	"ceraserver/internal/database"
+	"ceraserver/pkg/api"
+	"context"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+)
 ```
 
 We can see that we are importing other parts of the project following a file structure that helps keep things organised. The file structure looks like:
 
 ```
-COPY THE relevant parts of `TREE` HERE
+.
+├── cmd
+│   └── init_db.go
+├── config
+│   └── config.go
+├── internal
+│   └── database
+│       └── sqlite.go
+├── pkg
+│   └── api
+│       └── handlers.go
+├── go.mod
+├── go.sum
+├── main.go
+├── main_test.go
+└── Taskfile.yml
 ```
 
+(with a few things omitted for brevity).
 
 The `main` function itself is:
 ```go
-func main()
-COPY IN THE REST HERE
+func main() {
+	ready := make(chan struct{})
+	if err := run(ready); err != nil {
+		log.Fatalf("Error running application: %v", err)
+	}
+}
 ```
 
-As you can see, the main function doesn't do much more than call the `run` function. This makes it convenient to test the application logic that lies within `run`. I discuss some basic testing [here XXX](#link to testing).
+As you can see, the main function doesn't do much more than call the `run` function. This makes it convenient to test the application logic that lies within `run`. I discuss some basic testing [below](@sec-testing-main).
 
 Now let's look at the `run` function where the application logic lies. We first initialize the database, creating it if necessary.
 
 ```go
-func run () {
+func run(ready chan<- struct{}) error {
+	// Initialize the database
+	database.InitDB()
+	defer database.CloseDB()
+	fmt.Println("Database initialized successfully!")
 
-	SHOW THE FIRST PART OF THE RUN FUNCTION -- SETTING UP THE DB
 ...
 ```
 
@@ -116,7 +203,11 @@ Then we start setting up the http server by adding handlers
 
 ```go
 ...
-SHOW THE ADDING HANDLERS PART
+	// Define HTTP routes
+	mux := http.NewServeMux()
+	mux.HandleFunc("/healthcheck", healthcheck)
+	mux.HandleFunc("/v1/healthcheck", healthcheck)
+	mux.HandleFunc("/v1/log-temperature", api.LogTemperature)
 ...
 ```
 
@@ -126,7 +217,10 @@ A very simple `healthcheck` handler make it easy to determine whether the servic
 The `healthcheck` handler is:
 
 ```go
-HEALTHCHECK HANDLER
+func healthcheck(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintln(w, "Server is healthy")
+}
 ```
 :::
 
@@ -135,10 +229,24 @@ The log temperature handler is defined in a separate file that we'll [look at la
 Next, we start the http server as a goroutine:
 
 ```go
-SHOW THE GOROUTINE FOR THE HTTP SERVER
+...
+	// Create an HTTP server
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: mux,
+	}
+
+	// Start the HTTP server
+	go func() {
+		close(ready)
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+...
 ```
 
-We send a signal back on the `XXX` channel that the server is started, primarily as helpful signal for tests to be able to wait until the server is ready before proceeding[^2])
+We send a signal back on the `ready` channel that the server is started (by closing it), primarily as helpful signal for tests to be able to wait until the server is ready before proceeding[^2])
 
 [^2]: A simpler but less robust alternative to using a channel and waiting for a signal is just to wait for some fixed time after telling the server to start before sending requests, and hoping that it will be ready in time. The problem with this is that setting a longer wait time delays the test unnecessary every single time it is run (which should be *very* often), but setting too short of a time could cause flaky or system dependent test failures (every developers worst nightmare), for example due to a less powerful machine running the tests in CI.  
 
@@ -146,7 +254,25 @@ We send a signal back on the `XXX` channel that the server is started, primarily
 Now the server will being running forever. This alone would work, but it's better if we can provide a means to shutdown gracefully when possible. To do so we wait for interrupt signals:
 
 ```go
-SHOW INTERRUPT AND GRACEFUL SHUTDOWN STUFF
+...
+	// Channel to listen for interrupt signals
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+
+	// Wait for an interrupt signal
+	<-interrupt
+	fmt.Println("Shutting down server...")
+
+	// Gracefully shutdown the server
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		return fmt.Errorf("Failed to shutdown server: %w", err)
+	}
+
+	fmt.Println("Server shutdown successfully")
+	return nil
+}
 ```
 
 This allows us to stop the server with  `Ctrl+c` , and the program will let us know that the graceful shutdown was successful by a log to the console.
@@ -154,14 +280,26 @@ This allows us to stop the server with  `Ctrl+c` , and the program will let us k
 That's how the overall http server works, now let's take a quick look at the `main_test.go` file to see how this can be tested locally.
 
 
-### Testing main.go (MIGHT NEED A TAG HERE?>)
+### Testing main.go {#sec-testing-main}
 
 ....
+
+
+## RPi Service
+- Write about the RPi Python service
+	- Measurement devices can be connected via GPIO (or other ways, but this is particularly convenient on RPi/arduino type devices). 
+	- The choice of RPi makes it easy to use a python script and has some benefits with setting up initial wifi connection when prototyping locally. It's definitely massively overkill for what it needs to do. I'd definitely re-write in C for use on a much simpler and cheaper arduino if an significant scale is required, but for now, the ease of python is a good compromise.
+	- The python script is simple but effective
+		- Some error handling
+		- Should add a rolling log (so that data can be uploaded when connection resumes if internet is lost)
+		- Should start recording it's own timestamp (and then the server can store both server time and node time)
+		- POSTs data to the endpoint periodically.
 
 
 ### Full main contents
 
 Here is the full `main.go` file contents in one chunk.
+
 
 ```go
 INSERT MAIN.GO HERE
