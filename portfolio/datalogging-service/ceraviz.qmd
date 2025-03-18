@@ -1,0 +1,13 @@
+---
+draft: true
+title: "A Reflex frontend for the data-logging system"
+date: "2025-03-25"
+---
+
+![](./cover_3.webp)
+
+
+TODO:
+- This is another blog related to the [data logging service](ceraserver.qmd). The backend api was covered in the first post, then the data-logger itself was covered [in this post](ceralog.qmd). This post covers the frontend part that displays data to the user.
+- Frontend is a [Reflex](https://reflex.dev) app that ...
+- ...

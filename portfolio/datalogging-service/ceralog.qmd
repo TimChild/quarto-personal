@@ -1,0 +1,18 @@
+---
+draft: true
+title: "RPi data-logger"
+date: "2025-03-18"
+---
+
+![](./cover_2.webp)
+
+
+TODO: 
+- This follows on from [the previous post](ceraserver.qmd)
+- The part gives an overview of the data-logger part that uses a Raspberry Pi and a python script to record environmental data from attached sensors, and send that data to the central server (from the previous post) via a REST API.
+- Some minimal details on setting up the RPi
+- Some discussion of using UV to run the script
+- Setting up the Systemd service to run the script on boot
+- Controlling the on-board LED to indicate issues via flash codes.
+- The deployment procedure (taskfile task to scp files and ssh execute commands etc.)
+
