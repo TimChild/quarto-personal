@@ -30,23 +30,19 @@ Since you're here now, here's some information about me:
 
 
 ### Who am I
-I'm a physicist turned AI software engineer with a degree in teaching. This combination of experience has supercharged my interest in the current AI revolution. 
 
-My PhD research was quantum computing adjacent, and although I believe that will also be a very important technological advancement of 21st century, I've been drawn back to artificial intelligence by the recent boom. I see an enormous untapped potential unveiling itself, and I have diverted my efforts toward realizing it.
+I'm a physicist turned AI software engineer with a degree in teaching. I love to learn, and I want to build things that make a difference.
+
+My PhD research was related to quantum computing, and although I believe that will also be a very important technological advancement of 21st century, I've also had a long standing interest in artificial intelligence. Given the enormous potential of AI, I have dedicated significant time to learning the necessary skills to utilize AI in a practical way.
 
 ### Academic background
+
 I've had a physics themed academic background since my undergraduate education in the heart of London at Imperial College London. I took a slight detour toward education; obtaining a post-graduate certificate of education from the University College London where I specialized in Science and Mathematics. Most recently, I completed a PhD in the renowned Quantum Matter Institute of the University of British Columbia, where I developed a novel measurement technique applicable to mesoscopic quantum devices (similar to many of the quantum computing qubits).
 
-### Diversion to AI
-I believe that we are on the verge of an AI revolution, and that the future of AI is largely going to be shaped by those who take action now. While the recent advancements have been impressive, I'm not sure that anyone can comprehend the true potential that lies ahead of us. Although my academic background is primarily in quantum computing, I find the current trajectory of AI so compelling that I intend to be part of this next step in AI evolution.
+### AI and Software Development
 
-### Early Passion and Development
-I've had a strong interest in AI since my early teenage years over 15 years ago when I created my first piece of software that utilized machine vision and algorithmic processes to mimic the behavior of a human user including solving captcha-like challenges autonomously. More recently, as generative AI began taking off toward the end of my PhD, I opted again for a self-directed learning approach to rapidly acquire the necessary additional skills in modern software engineering that would allow me to work at the forefront of the field. This decision allowed me to focus on efficient learning without the constraints of any one organization's technical choices or limitations imposed by a specific job position.
-
-### Transition to Entrepreneurship
-In the past year, I have move toward entrepreneurship, driven by a passion for harnessing the potential of current and future AI innovations. Recognizing the rapid evolution of the AI landscape, I embarked on an independent journey to develop an application that accelerates their practical deployment.
+I've had a strong interest in AI since my early teenage years over 15 years ago when I created my first piece of software that utilized machine vision and algorithmic processes to mimic the behavior of a human user including solving captcha-like challenges autonomously. I have regularly dabbled with ML techniques, and more recently, as generative AI began taking off toward the end of my PhD, I opted again for a self-directed learning approach to rapidly acquire the necessary additional skills in modern software engineering that would allow me to work productively at the forefront of the field. This decision has allowed me to rapidly develop a deep understanding of many of the current state-of-the-art techniques in AI.
 
 ### Current Focus and Future Goals
-I am currently focused on leveraging my skills in AI and software development. I'm actively seeking funding opportunities to scale my project into a sustainable business, but I am also very interested in joining a team in a role that will challenge and inspire me.
 
-
+I am currently focused on leveraging my skills in AI and software development. I'm actively seeking funding opportunities to scale my personal project into a sustainable business, but I am also very interested in joining a team in a role that will challenge and inspire me.
