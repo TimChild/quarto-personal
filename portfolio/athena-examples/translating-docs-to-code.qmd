@@ -1,0 +1,105 @@
+---
+title: "Example -- Translating documentation to code"
+subtitle: "An example use case of AthenaInstruments -- Translating react documentation into python code"
+date: "2025-03-27"
+image: cover_translate_docs.webp
+categories: [athena, athena-example]
+---
+
+![](cover_translate_docs.webp)
+
+
+# Using Athena to translate react documentation into python code
+
+Part of the work I've been doing to create a Reflex plugin that integrates Clerk authentication requires some fairly simple but potentially time consuming work. Here is an overview of how I used Athena to speed up the process.
+
+
+## The task
+
+Clerk has good documentation for their react components, but I need to translate that into documented and type annotated python code so that Reflex developers can easily use the same features in their python native Reflex application.
+
+## The problem
+
+It's not a very difficult task for the most part, it's just a lot of a copy+paste, with some minor modifications to [convert from camelCase to snake_case](./looking-up-reflex-doc.qmd). The main problem is that it's not a very fun job for a human to do, and because of that, it's error prone. 
+
+## Using Athena
+
+I'm still testing out the tools I've built for my personal LLM assistant, Athena, so I start out by just checking that it can see the repository I'm working on.
+
+> Get the repo structure for TimChild/reflex-clerk-api
+
+::: {.callout-note icon=false collapse=true}
+## Screenshot from AthenaInstruments
+
+![](translating-screenshot-1.webp)
+
+:::
+
+Athena quickly uses the `github_repository_structure` tool to see an overview of the repository. The tool returns some additional specific information about each file for Athena to see, but Athena correctly determines that I probably just want the pretty output for now (see screenshot above).
+
+
+
+Great, now we can get started with the task. I have a pretty good idea of what I'm aiming for, and rather than trying to explain it in detail, I find it easier and more effective to just give an example. So, I provide Athena athena an example of the conversion I am looking for (from copied docs to the python implementation).
+
+Then, in the same messag, I ask to carry out the same conversion on the rest of the documentation (and copy+paste that in[^1]).
+
+[^1]: Having to manually copy and paste the relevant documentation is a bit annoying, but at least I can copy large chunks without worrying about formatting, and in the future I could add a web scraping tool that handles this task.
+
+I haven't yet provided Athena any information about what I've already implemented for these additional docs, so Athena first carries out some quick searches.
+
+- `github_search_specific` -- Using this to efficiently find the source of the example that I provided
+- `github_repository_get_file` -- Then following up with a request for the full file contents of that file since I indicated we would be working on the rest of the code in that file.
+
+Then using the result from those searches and copied documentation, Athena quickly produces an updated version of the file, complete with type annotations and docstrings.
+
+
+::: {.callout-note icon=false collapse=true}
+## Screenshot from AthenaInstruments
+
+![](translating-screenshot-2.webp)
+
+:::
+
+
+Since that worked so well, I copy in a bunch more documentation for Athena to convert. 
+
+I'm a bit pessimistic about Athena being able to find the relevant python code, so I try to helpfully suggest the file that it's in -- but being the fallible meatbag that I am, I actually provide the wrong file name...
+
+Turns out to be no problem though, Athena carries out a series of tool calls:
+
+- `github_search_specific` -- First looking for the relevant code within the specific file I suggested
+	- This returns an error because I gave the wrong file name
+- `github_repository_structure` -- To recover, Athena checks the repository structure again [^2] 
+- `github_repository_get_file` -- Having identified the file I was actually referring to, Athena then retrieves it's contents.
+
+Then using this context (along with the additional docs I've copied into the conversation), Athena quick translates another 50+ properties from the documentation into python code.
+
+[^2]: The earlier call for the repository structure has dropped out of the history by now since we've been copying and pasting large chunks of text, and I've set the context limits to be quite small to keep things snappy and efficient.
+
+
+::: {.callout-note icon=false collapse=true}
+## Screenshot from AthenaInstruments
+
+![](translating-screenshot-3.webp)
+
+:::
+
+The docstrings aren't being added correctly, but that's my fault -- I've set too low of a limit on the output tokens, and then asked for too much work in one go, so Athena has chosen to prioritize giving a complete implementation at the cost of cutting out the docstrings. For now, it's a quick fix -- I just ask for the first half with docstrings, and then the second in a follow up.
+
+
+I continue this process a couple more times, each iteration taking a minute or two (mostly due to my slow copy+pasting), and by the end we've implemented well over 100 documented and typed properties accross numerous classes sread over several files.
+
+
+## Conclusion
+
+It was a little bit annoying to have to copy+paste to and from Athena, but being able to copy pages at a time instead of per property cut down the annoyance by 20x or so. Overall, we managed to get through a task that realistically would have taken hours in a matter of minutes, and saved my pinky finger from a lot of unnecessary strain too!
+
+
+## Next steps
+
+This is the sort of task that Athena should be able to do end to end in one go. I have built-in a web searching tool, but that tool is not great at scraping specific content from large web pages, it's better at retrieving the most useful snippets from the top few results of a google search. So, I could really do with adding a dedicated web scraper.
+
+I'd also like to avoid having to fix minor formatting/linting issues that often occur. I already have my linting rules and tools well set up to give me informative errors when things aren't quite right -- I'd like to be able to pass that directly back to Athena to be able to iterate on the code more quickly.
+
+This gets tricky pretty quickly when keeping in mind how the system can scale for many users though. The web application should generally run in a stateless manner, meaning that development environments would need to be set up and torn down on a per request basis. This isn't really practical though, so I'll need to think about a better way to solve this... In the short term, I might focus more on improving the capabilities when running locally, where I can give Athena a bit more power over executing local scripts etc. We'll see...
+
