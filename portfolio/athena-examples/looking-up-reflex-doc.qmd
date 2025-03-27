@@ -10,7 +10,7 @@ categories: [athena, athena-example]
 
 # Using Athena to look up obscure implementation details
 
-I've recently been creating a plugin for Reflex that integrates Clerk user authentication. Part of this involved setting up some fiddly details that understandably aren't well documented in the Reflex docs. So I turned to Athena to help me find the relevant code within the Reflex repository so that I didn't end up duplicating their work unnecessarily, and it took all of 10 seconds to find what I was looking for, and another few seconds to get all the context I needed to finish my task.
+I've recently been creating a plugin for [Reflex](https://reflex.dev) that [integrates Clerk user authentication](https://github.com/TimChild/reflex-clerk-api). Part of this involved setting up some fiddly details that understandably aren't well documented in the Reflex docs. So I turned to [Athena](../athenainstruments/index.qmd) to help me find the relevant code within the Reflex repository so that I didn't end up duplicating their work unnecessarily, and it took all of 10 seconds to find what I was looking for, and another few seconds to get all the context I needed to finish my task.
 
 ### The task
 I want to allow users (other reflex developers) to pass in props via type annotated snake_case arguments (as is the norm in python), but the react component I am wrapping needs the arguments translated into camelCase. 
