@@ -3,6 +3,7 @@ title: "Admin dashboard"
 subtitle: "A simple dashboard for quickly managing simple database tasks."
 date: "2025-03-03"
 image: cover.webp
+categories: [athena, python]
 ---
 
 ![](cover.webp)

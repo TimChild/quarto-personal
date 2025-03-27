@@ -2,6 +2,7 @@
 draft: true
 title: "A Reflex frontend for the data-logging system"
 date: "2025-03-25"
+categories: [datalogging, reflex]
 ---
 
 ![](./cover_3.webp)

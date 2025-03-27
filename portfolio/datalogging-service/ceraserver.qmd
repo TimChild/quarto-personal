@@ -2,6 +2,7 @@
 draft: false
 title: "A simple data-logging service with Golang"
 date: "2025-03-18"
+categories: [datalogging, go]
 ---
 
 ![](./cover_1.webp)

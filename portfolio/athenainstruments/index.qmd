@@ -4,6 +4,7 @@ title: "AthenaInstruments overview"
 subtitle: "A production ready generative AI platform"
 date: "2025-03-01"
 image: cover.webp
+categories: [athena, python]
 ---
 
 ![](cover.webp)
