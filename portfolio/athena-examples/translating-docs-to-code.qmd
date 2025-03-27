@@ -11,12 +11,12 @@ categories: [athena, athena-example]
 
 # Using Athena to translate react documentation into python code
 
-Part of the work I've been doing to create a Reflex plugin that integrates Clerk authentication requires some fairly simple but potentially time consuming work. Here is an overview of how I used Athena to speed up the process.
+Part of the work I've been doing to create a [Reflex](https://reflex.dev) plugin that [integrates Clerk authentication](https://github.com/TimChild/reflex-clerk-api) requires some fairly simple but potentially time consuming work. Here is an overview of how I used Athena to speed up the process.
 
 
 ## The task
 
-Clerk has good documentation for their react components, but I need to translate that into documented and type annotated python code so that Reflex developers can easily use the same features in their python native Reflex application.
+Clerk has [good documentation](https://clerk.com/docs/components/overview) for their react components, but I need to translate that into documented and type annotated python code so that Reflex developers can easily use the same features in their python native Reflex application.
 
 ## The problem
 
@@ -41,7 +41,7 @@ Athena quickly uses the `github_repository_structure` tool to see an overview of
 
 Great, now we can get started with the task. I have a pretty good idea of what I'm aiming for, and rather than trying to explain it in detail, I find it easier and more effective to just give an example. So, I provide Athena athena an example of the conversion I am looking for (from copied docs to the python implementation).
 
-Then, in the same messag, I ask to carry out the same conversion on the rest of the documentation (and copy+paste that in[^1]).
+Then, in the same message, I ask to carry out the same conversion on the rest of the documentation (and copy+paste that in[^1]).
 
 [^1]: Having to manually copy and paste the relevant documentation is a bit annoying, but at least I can copy large chunks without worrying about formatting, and in the future I could add a web scraping tool that handles this task.
 
@@ -73,6 +73,25 @@ Turns out to be no problem though, Athena carries out a series of tool calls:
 - `github_repository_get_file` -- Having identified the file I was actually referring to, Athena then retrieves it's contents.
 
 Then using this context (along with the additional docs I've copied into the conversation), Athena quick translates another 50+ properties from the documentation into python code.
+
+```{mermaid}
+
+sequenceDiagram
+    participant User
+    participant AI
+    participant Search Service
+
+    User->>AI: Ask question <br> (with context)
+    AI->>Search Service: Search repository
+    Search Service-->>AI: Error: Search failed
+    AI->>Search Service: Get repository structure
+    Search Service-->>AI: Repo structure
+    AI->>Search Service: Get contents of specific file
+    Search Service-->>AI: File contents
+    AI->>User: Generate and return response
+
+```
+
 
 [^2]: The earlier call for the repository structure has dropped out of the history by now since we've been copying and pasting large chunks of text, and I've set the context limits to be quite small to keep things snappy and efficient.
 
