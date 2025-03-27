@@ -24,7 +24,15 @@ Start grepping my way through the reflex repository looking for places that snak
 ### The Athena way
 Instead, I decided to ask my personal LLM assistant "Athena".
 
+
 > In the reflex-dev/reflex repository, can you tell me if there are any functions related to converting snake_case to camel case?
+
+::: {.callout-note icon=false collapse=true}
+## Screenshot from AthenaInstruments
+
+![](looking-up-screenshot-1.webp)
+
+:::
 
 In response, Athena decides to carry out this search via the `github_search_specific` tool (one of many custom tools I have built), passing these arguments:
 ```javascript
@@ -48,6 +56,25 @@ This search takes a fraction of a second, returning only the top few most simila
 ::: {.aside}
 I've previously asked questions about the Reflex repository, so Athena already has it vectorized... Otherwise, the tool call would have returned an error indicating that it hadn't been vectorized yet, and Athena could handle that and call another tool that carries out that initial vectorization first.
 :::
+
+The general workflow here looks something like:
+
+```{mermaid}
+sequenceDiagram
+    participant User
+    participant AI
+    participant VectorRepo
+    participant Vectorize Service
+
+    User->>AI: Ask question
+    AI->>VectorRepo: Search for content
+    VectorRepo-->>AI: Error: Vectorized repo not found
+    AI->>Vectorize Service: Vectorize repository
+    Vectorize Service-->>AI: Repo vectorized, basic info returned
+    AI->>VectorRepo: Search for content again
+    VectorRepo-->>AI: Search results
+    AI->>User: Return curated results
+```
 
 Even though this very efficiently narrows down the search, the results aren't necessarily going to be great, so I don't want to have to sift through them myself. Instead, Athena picks up the results and correctly identifies that the first few aren't actually relevant, and singles out the one that is. It then returns that to me with some additional information about where the code snippet came from:
 
@@ -85,6 +112,13 @@ This is exactly the sort of thing I was looking for!
 Even though I can now see exactly where this chunk is located, I don't want to have to go there and look. So I ask:
 
 >Can you show me more of the class that comes from.
+
+::: {.callout-note icon=false collapse=true}
+## Screenshot from AthenaInstruments
+
+![](looking-up-screenshot-2.webp)
+
+:::
 
 This time, Athena chooses to use a different tool, `github_repository_get_file`, since it can also see from the previous message where this snippet came from. 
 ```javascript
