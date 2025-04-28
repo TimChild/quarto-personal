@@ -7,3 +7,6 @@ title-block-banner: true
 
 # Automatically set the last modified date
 date-modified: last-modified
+
+# Set captions to show up below figures (`![caption text](img.png)`)
+fig-cap-location: bottom

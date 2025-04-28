@@ -1,0 +1,39 @@
+---
+title: "Implementing Functional LangGraph with MCP"
+subtitle: "Setting up an initial LangGraph workflow for the main agent with MCP"
+image: cover.webp
+date: "2025-04-28"
+categories: [daily, ml_monday, python, mcp, langgraph]
+draft: False
+---
+
+![](cover.webp)
+
+## ML Monday -- Functional LangGraph with MCP
+
+For the first Machine Learning Monday of this series, I spent a couple of hours setting up a basic LangGraph workflow that will be used to manage at least the main thread of an agentic workflow in my new side project. ([See here for the daily plan](../daily-posts/index.qmd)). 
+
+I previously spent a weekend setting up a small python app demonstrating the use of Anthropic's Model Context Protocol (MCP) that you can [read about here](https://www.linkedin.com/article/edit/7315524205003882496/). So, today's work was mostly taking the parts I like from that, and deciding how to start splitting things up in a way that will allow me to take advantage of a serverless deployment architecture down the line.
+
+This post is going to be a bit bare bones because I had to do a bunch of other stuff to get things going. In the future, expect pretty pictures/diagrams/examples, etc.
+
+For now, here are a few thoughts/takeaways:
+
+- I like using this [dependency injection framework](https://python-dependency-injector.ets-labs.org/) -- It helps collect app configuration in one place, a `config.yml` file (or technically two, since you also need to set up the `Containers` that handle the dependency injection in  `containers.py`). For testing, any part can be easily overridden via a `with container.override(...): ` block.
+- The new [LangGraph Functional API](https://langchain-ai.github.io/langgraph/concepts/functional_api/) seems pretty nice -- It doesn't end up saving LOC compared to the graph interface, but so far, I find it easier to read, and I hope that it will be easier to debug! You technically loose a bit of flexibility, but you can always call sub-graphs if needed to get back the deepest levels of control.
+- MCP Client implementations are still pretty immature in both the [official python-sdk](https://github.com/modelcontextprotocol/python-sdk) and [LangChain's MCP adapters](https://github.com/langchain-ai/langchain-mcp-adapters) -- I don't want to re-invent the wheel, but I also want some insulation from breaking changes. I'm tackling this with a custom `GraphRunAdapter` where I exclusively implement methods that I'm actually interested in using internally, in addition to my own subclass of the LC MCP client implementation. The `GraphRunAdapter` uses my subclass of the LC client (so I can easily patch or fix behavior that I don't like, without having to re-implement everything), and the rest of the code uses `GraphRunAdapter` so that any breaking changes from dependencies *only* need to be addressed in **one** place, and that's the *only* place I ever need to think about the internals of langchain's implementation.
+
+
+In this session, I got to the point of the agent graph running with a test chat model, but I still have to deal with an issue related to a connection error between my MCP client and the ["everything" MCP server](https://github.com/modelcontextprotocol/servers/tree/main/src/everything).
+
+## Next steps
+
+- Fix the MCP connection issue
+- Check that tool calls can be made
+- Check that the main agent can carry out multiple steps of thought before responding to the user
+
+## Further down the line
+- Make the graph interruptable/resumable
+- Make some configuration modifiable by user (e.g. prompt templates)
+- Handle situations where context gets too large (either from long conversation, or tool returning too much information)
+- Allow recursive call to the same graph as a sub-graph (this unlocks a LOT of customization of workflows via configuration only)
