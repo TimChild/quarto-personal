@@ -1,5 +1,5 @@
 ---
-title: "Portfolio"
+title: "Blogs"
 author: ""
 listing:
   contents: portfolio
@@ -13,10 +13,8 @@ page-layout: full
 title-block-banner: true
 ---
 
-## A few of the projects I've worked on
+## Projects, articles, blogs, etc.
 
-Below are some short descriptions of various projects and parts of projects I've worked on.
-
-I've only just started adding to this collection (2025-03-01), so this will be far from exhaustive for a while. I'm happy to discuss these and much more of my previous work in more detail.
+I'm not sure yet how I want to organize the content in my site, so for now this is a mix of everything from short blog posts, to project descriptions. 
 
 ---
