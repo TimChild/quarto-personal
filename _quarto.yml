@@ -18,6 +18,7 @@ website:
       - portfolio-index.qmd
   # site-url: https://adventuresoftim.com/quarto/
   site-url: https://adventuresoftim.com/
+  google-analytics: "G-WG3J7VTV08"
 
 ## Defaults for all formats
 # Default to me as author on anything in here.
