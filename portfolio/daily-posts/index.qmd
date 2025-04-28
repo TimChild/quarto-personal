@@ -14,13 +14,13 @@ This is is the beginning of an experiment I want to carry out. I want to dedicat
 
 Here's a little overview of the plan:
 
-- ML Monday -- I'm including AI within ML, so this could be anything from the fundamentals of ML (regression, etc.) to LLM workflows with LangChain, to cloud APIs for computer vision, etc.
-- Tech Stack Tuesday -- A backend/infrastructure focus, e.g. anything from the low level integration of a relational database into the project app, to trying out new infrastructure deployment workflows with AWS CDK.
-- Web Wednesday -- Work on the frontend aspects of the app or new lambda api endpoints.
-- Third-party Thursday -- Focus on integrating or investigating third party tools, for example, exploring new MCP servers.
-- Frontend Friday -- Similar to Wednesday
-- Server Saturday -- Cloud infrastructure, maybe with a focus on improving monitoring or efficiency of scaling etc.
-- Security Sunday -- Spend additional time improving tests, refactoring code, checking deployment pipelines, permissions granted in IaC etc. Things that overall contribute to the security and stability of application.
+- **ML Monday** -- I'm including AI within ML, so this could be anything from the fundamentals of Machine Learning (regression, etc.) to LLM workflows with LangChain, to cloud APIs for computer vision, etc.
+- **Tech Stack Tuesday** -- A backend/infrastructure focus, e.g. anything from the low level integration of a relational database into the project app, to trying out new infrastructure deployment workflows with AWS CDK.
+- **Web Wednesday** -- Work on the frontend aspects of the app or new lambda api endpoints.
+- **Third-party Thursday** -- Focus on integrating or investigating third party tools, for example, exploring new MCP servers.
+- **Frontend Friday** -- Similar to Wednesday
+- **Server Saturday** -- Cloud infrastructure, maybe with a focus on improving monitoring or efficiency of scaling etc.
+- **Security Sunday** -- Spend additional time improving tests, refactoring code, checking deployment pipelines, permissions granted in IaC etc. Things that overall contribute to the security and stability of application.
 
 There's overlap between the different days on purpose, to allow for flexibility in time management (assuming I continue this for more than a day or two...).
 
