@@ -1,0 +1,38 @@
+---
+title: "Daily Post Plan"
+subtitle: "Experimenting with daily posts on a topic per day of the week"
+image: cover.webp
+date: "2025-04-27"
+categories: [daily]
+draft: False
+---
+
+This is is the beginning of an experiment I want to carry out. I want to dedicate a set amount of time each day to working on either a specific aspect of of a side project I have, or just generally learning something new. Then set aside some time to write a short summary on the progress/findings.
+
+
+## Daily post plan
+
+Here's a little overview of the plan:
+
+- ML Monday -- I'm including AI within ML, so this could be anything from the fundamentals of ML (regression, etc.) to LLM workflows with LangChain, to cloud APIs for computer vision, etc.
+- Tech Stack Tuesday -- A backend/infrastructure focus, e.g. anything from the low level integration of a relational database into the project app, to trying out new infrastructure deployment workflows with AWS CDK.
+- Web Wednesday -- Work on the frontend aspects of the app or new lambda api endpoints.
+- Third-party Thursday -- Focus on integrating or investigating third party tools, for example, exploring new MCP servers.
+- Frontend Friday -- Similar to Wednesday
+- Server Saturday -- Cloud infrastructure, maybe with a focus on improving monitoring or efficiency of scaling etc.
+- Security Sunday -- Spend additional time improving tests, refactoring code, checking deployment pipelines, permissions granted in IaC etc. Things that overall contribute to the security and stability of application.
+
+There's overlap between the different days on purpose, to allow for flexibility in time management (assuming I continue this for more than a day or two...).
+
+
+## Brief background
+
+I'm planning for these posts to fall into one of two categories -- development of a side project, or general research/learning. 
+
+In terms of the side project, I've already previously built a perplexity like application, from the low level optimization of code parsing for efficient data ingestion as part of a custom RAG workflow, to the deployment scripts that automate continuous integration tests and deployment to virtual private servers. Plus a bunch of stuff in the middle, like integrating and building monitoring/management tools, etc. 
+A lot has changed in the last year, so I want to take this opportunity to try out a new approach, and dive deeper into the newest technologies and developments. I expect I'll find some intersting information and useful tools along the way.
+
+In the times that I'm not focussing on the side project, I plan to just dive into whatever interests me, be in research papers, open source projects, or whatever. Sometimes I just like to learn.
+
+
+
