@@ -3,20 +3,18 @@ title: "An extensible MCP chat app in pure Python"
 subtitle: "Using MCP to build an extensible Python chat app (with LangGraph's Functional API)"
 image: cover.webp
 date: "2025-04-08"
-categories: [athena, llm_tools, python]
+categories: [llm_tools, python, mcp, langgraph]
 fig-cap-location: bottom
 draft: False
 ---
 
-See the original version of this post [on LinkedIn](https://www.linkedin.com/pulse/using-mcp-build-extensible-python-chat-app-langgraphs-timothy-child-qyyxe)
+See the original version of this post [on LinkedIn](https://www.linkedin.com/pulse/using-mcp-build-extensible-python-chat-app-langgraphs-timothy-child-qyyxe) (includes relevant hyperlinks).
 
 ---
 
-::: {.bg-white}
 
 ![](cover.webp)
 
-:::
 
 
 It seems like model context protocol (MCP) is all the rage right now, so I thought I'd try it out... At the same time, I tried out LangGraph's new Functional API.
