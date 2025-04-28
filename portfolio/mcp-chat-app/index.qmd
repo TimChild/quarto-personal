@@ -1,0 +1,102 @@
+---
+title: "An extensible MCP chat app in pure Python"
+subtitle: "Using MCP to build an extensible Python chat app (with LangGraph's Functional API)"
+image: cover.webp
+date: "2025-04-08"
+categories: [athena, llm_tools, python]
+fig-cap-location: bottom
+draft: False
+---
+
+See the original version of this post [on LinkedIn](https://www.linkedin.com/pulse/using-mcp-build-extensible-python-chat-app-langgraphs-timothy-child-qyyxe)
+
+---
+
+::: {.bg-white}
+
+![](cover.webp)
+
+:::
+
+
+It seems like model context protocol (MCP) is all the rage right now, so I thought I'd try it out... At the same time, I tried out LangGraph's new Functional API.
+
+Overall, I ended up creating a web app with Reflex built entirely with python and thought I'd share it with anyone that's interested in experimenting or using it as a starting point for their own project.
+
+Here's a quick demo of it using GPT-4o to call multiple tools from several different MCP servers simultaneously. 
+
+{{< video reflex-mcp-chat-demo.mp4 
+  title="Short demo of the LLM calling multiple tools to solve a task."
+>}}
+
+The source code can be found in this github repository. It's intended to be easy to get started with, but with the bones to extend into a much more capable application. Check it out and see what you think. Give it a ⭐ if you think it's interesting!
+
+## Overview
+
+The application itself is comprised of a few key technologies, namely Reflex, LangGraph, and Anthropic's MCP. Then there are several additional features included within the repository that help turn this into a maintainable and extensible starting point for a capable custom chat interface.
+
+
+## The Interface
+
+The first thing you see is the web app built using Reflex -- an open-source framework that enables the development of responsive and performant web apps with no JavaScript required. You write both the frontend and backend code in pure python, then reflex translates that into a Next.js frontend connected to a FastAPI backend via efficient websockets. It enables fast prototyping without the usual downside of having to re-write the entire frontend once you have more than a few concurrent users. It's designed to scale horizontally without limit.
+
+
+## Model Context Protocol (MCP)
+
+The reason we're here in the first place is that I wanted to try out Anthropic's relatively new MCP. It was released at the end of November 2024, but really started taking off in the last month or so. 
+
+![Modelcontextprotocol's GitHub star history.](mcp-stars.webp)
+
+In short, MCP is a standard for how tool providers should communicate with applications that utilize LLMs. It can be broken down into 3 main parts: MCP Servers that provide additional capabilities (such as interacting with the GitHub API), MCP Clients that handle the application side of the communication with the servers, and the application itself that manages which MCP clients are necessary at any given time. This results in an application that is decoupled from the tool provider: it has a common interface to all tools, and it doesn't need to care what language the tool is written in or whether it is running locally or as a SaaS, for example. This allowed me to write the starter app in a way that allows you to add any of 300+ MCP servers by simply adding a few lines to the config.yml file (along with any required API keys). 
+
+Servers can be found in the modelcontextprotocol/servers GitHub repository. There are about 20 reference servers implemented by Anthropic directly, a further 100 or so implemented by third parties as official integrations to their services, and at least 250+ community-developed servers for anything else. 
+
+In the starter app, I've integrated 4 servers via the 4 main methods (SSE, local stdio, npx, and docker) to demonstrate each of the ways MCP servers can be added to an application. One of the 4 is the official GitHub server that was released just a few days ago. Because it's written in Go, they can ship it in a docker container that's only 29 MB in size! I expect we'll see many more MCP Servers written in Go shortly.
+
+
+## LLMs and LangGraph
+
+We've got the interface and MCP, now we just need to hook in an LLM to connect the dots and make something happen. It's easy enough to design around direct API calls to any one of the major LLM providers, and that's often what you'll see in demo apps. Here, I've decided to add a layer of model agnosticism and future growth potential by using LangChain's newer and much more capable LangGraph framework. This allows the developer to focus more on the design of interesting agent workflows, while providing built-in tooling for things like event streaming, persistence, retrying, fallbacks, etc. And by putting the LangGraph layer between your application and the LLMs, it also makes it easy to be model agnostic. In the starter app here, I've set it up for both Anthropic's Claude Sonnet and OpenAI's GPT-4o to demonstrate that. It would be easy to add in any number of other LLMs of your choosing, even self-hosted ones.
+
+AI libraries have been changing pretty rapidly in the last year, and in fact, even within LangChain's newer LangGraph library, there is an even newer Functional API that was only released at the end of January this year. I wasn't sure how much I'd like the new API, so I built the core of the application with both the standard graph syntax and the new Functional API to be able to compare side-by-side. You can see in the demo video the option to choose between running in either mode. Both behave the same, but the way they are implemented looks pretty different. If you're at all interested in checking out the new functional approach, or just checking out LangGraph for the first time, this is a great resource to be able to try out both methods and see what you like and dislike.
+
+
+## Additional Features
+
+In addition to application described above, I've included several tools that are now an essential part of my development process. The first few I use for projects in any language, and then there are several that are python specific.
+
+- Task -- A modern take on GNU Make written in Go. 
+
+- Pre-commit -- A framework for managing git hooks (not actually limited to pre-commit).
+
+- GitHub Actions -- Automation of software workflows (see the ".github" directory).
+
+- UV -- An extremely fast Python project manager.
+
+- Pyright -- A static type checker and LSP.
+
+- Ruff -- An extremely fast Python linter and code formatter.
+
+- Pytest -- A testing framework.
+
+- Dependency Injector -- A dependency injection framework that allows for easy management of app configuration and testing.
+
+The last one (dependency injector) is a bit overkill while the application is so small, but I figured it's nice to see it in action as a template for how it could be applied in a larger project.
+
+---
+
+## TL;DR
+
+
+- A starter python app for a chat interface that utilizes MCP servers can be found in this github repository.
+
+- Reflex is an excellent framework for pure python web application development.
+
+- MCP makes it easy to integrate a very wide range of tools into LLM applications.
+
+- Both of LangGraph's modes of operation (regular, and new Functional API) are included for those interested in seeing the difference in action.
+
+- A bunch of additional development tools are configured for an efficient development environment.
+
+
+
