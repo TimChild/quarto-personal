@@ -1,0 +1,17 @@
+---
+title: ""
+subtitle: ""
+image: cover.webp
+date: "2025-04-29"
+categories: [daily, tech_stack_tuesday, python]
+draft: True
+---
+
+
+
+- Add persistent storage to graph (sqlite? postgres? managed db uri?)
+	- Maybe I have a local config and a deployed config?
+	Local uses sqlite, deployed using managed db uri
+- Add redis (at least for deployed config)
+
+
