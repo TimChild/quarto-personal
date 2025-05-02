@@ -4,7 +4,7 @@ subtitle: "Experimenting with daily posts on a topic per day of the week"
 image: cover.webp
 date: "2025-04-27"
 categories: [daily]
-draft: False
+draft: True
 ---
 
 This is is the beginning of an experiment I want to carry out. I want to dedicate a set amount of time each day to working on either a specific aspect of of a side project I have, or just generally learning something new. Then set aside some time to write a short summary on the progress/findings.
@@ -15,6 +15,7 @@ This is is the beginning of an experiment I want to carry out. I want to dedicat
 Here's a little overview of the plan:
 
 - **ML Monday** -- I'm including AI within ML, so this could be anything from the fundamentals of Machine Learning (regression, etc.) to LLM workflows with LangChain, to cloud APIs for computer vision, etc.
+	- [Implementing Functional LangGraph with MCP](../25-04-28-ml-monday-lg-with-mcp/index.qmd)
 - **Tech Stack Tuesday** -- A backend/infrastructure focus, e.g. anything from the low level integration of a relational database into the project app, to trying out new infrastructure deployment workflows with AWS CDK.
 - **Web Wednesday** -- Work on the frontend aspects of the app or new lambda api endpoints.
 - **Third-party Thursday** -- Focus on integrating or investigating third party tools, for example, exploring new MCP servers.

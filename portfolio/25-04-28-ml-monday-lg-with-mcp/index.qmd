@@ -4,7 +4,7 @@ subtitle: "Setting up an initial LangGraph workflow for the main agent with MCP"
 image: cover.webp
 date: "2025-04-28"
 categories: [daily, ml_monday, python, mcp, langgraph]
-draft: False
+draft: True
 ---
 
 ![](cover.webp)
